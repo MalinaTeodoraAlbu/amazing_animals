@@ -9,9 +9,12 @@ function Feed() {
 
       <div className="Feed_container"></div>
     </div>
-    <div className="Feed_ADv">
-      
+
+    <div className="Feed_side_bar" >
+      <div className="Feed_Search"></div>
+      <div className="Feed_ADv"></div>
     </div>
+    
     </div>
   );
 }

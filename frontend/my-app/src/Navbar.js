@@ -20,22 +20,22 @@ function Navbar() {
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="/favourites">
             <i className="fas fa-heart" style={{'--i':2}}></i>
           </a>
         </li>
         <li>
-          <a href="#">
-            <i className="fas fa-search" style={{'--i':3}}></i>
+          <a href="/myAnimals">
+            <i className="fas fa-paw" style={{'--i':3}}></i>
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="/myProfile">
             <i className="fas fa-user" style={{'--i':4}}></i>
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="/settings">
             <i className="fas fa-cog" style={{'--i':5}}></i>
           </a>
         </li>
