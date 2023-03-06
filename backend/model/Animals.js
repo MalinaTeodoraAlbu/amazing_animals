@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
+import mongoose from 'mongoose';
 
 const animalSchema = new mongoose.Schema({
   id: {
@@ -28,50 +27,14 @@ const animalSchema = new mongoose.Schema({
   weight: {
     type: Number,
     required: true
-  }
-});
-
-const medicalRecordSchema = new mongoose.Schema({
-    id: {
-      type: Number
-    },
-    animalId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Animal',
-      required: true
-    },
-    content: {
-      type: String,
-      required: true
-    },
-    repeat: {
-      type: Boolean,
-      default: false
-    },
-    title: {
-      type: String,
-      required: true
-    }
-  });
-
-const animalMedicalRecordSchema = new mongoose.Schema({
-  animalId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Animal',
-    required: true
   },
-  recordId: {
+  userid: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Medical_Record',
+    ref: 'User',
     required: true
   }
 });
-
-animalSchema.plugin(AutoIncrement, { inc_field: 'id' });
-medicalRecordSchema.plugin(AutoIncrement, { inc_field: 'id' });
 
 const Animal = mongoose.model('Animal', animalSchema);
-const Medical_Record = mongoose.model('Medical_Record', medicalRecordSchema);
-const AnimalMedicalRecord = mongoose.model('Animal_Medical_Record', animalMedicalRecordSchema);
 
-module.exports = { Animal, Medical_Record, AnimalMedicalRecord };
+export default Animal;
