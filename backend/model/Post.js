@@ -19,11 +19,16 @@ const postSchema = new mongoose.Schema({
     required: true
   },
   datePosted: {
-    type: Date
+    type: Date,
+    default: Date.now
   },
   userid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true
+  },
+  picture: {
+    type: String,
     required: true
   }
 });

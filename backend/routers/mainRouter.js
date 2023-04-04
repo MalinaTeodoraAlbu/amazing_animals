@@ -4,6 +4,7 @@ import User from '../model/User.js';
 import Post from '../model/Post.js';
 import Comment from '../model/Comment.js';
 import PostComment from '../model/JoinPostComment.js';
+import MedicalRecord from '../model/MedicalRecord.js';
 import mongoose from 'mongoose';
 import Animal  from '../model/Animals.js';
 const mainRouter = express.Router();
@@ -35,6 +36,7 @@ const commentCollection = dbo.collection('Comment');
 const commentPostCollection = dbo.collection('JoinPostComment');
 const animalCollection = dbo.collection('Animal');
 const medicalRecordCollection = dbo.collection('Medical Record');
+
 
 
 // Get all users
@@ -113,7 +115,7 @@ mainRouter.post('/posts', async (req, res, next) => {
   try {
     const newPost = new Post(req.body)
     const result = await postCollection.insertOne(newPost)
-    await newPost.save();
+ 
     res.status(200).send(result)
   } catch (err) {
     res.status(500).send(err);
@@ -335,7 +337,10 @@ mainRouter.post('/animals/:userid', async (req, res) => {
     if (!user) {
       return res.status(404).send('User not found');
     }
-    const newAnimal = {...req.body, userid: userId};
+     const newAnimal = {
+      ...req.body,
+      userid: userId
+    };
     const result = await animalCollection.insertOne(newAnimal);
     res.status(200).send(result);
   } catch (err) {
@@ -344,6 +349,120 @@ mainRouter.post('/animals/:userid', async (req, res) => {
   }
 });
 
+// Get all posts for a user
+mainRouter.get('/users/:userid/posts', async (req, res) => {
+  try {
+    const userId = new ObjectId(req.params.userid);
+    const posts = await postCollection.find({ userid: userId }).toArray();
+    res.status(200).send(posts);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+// Create a new medical record
+mainRouter.post('/medicalRecord', async (req, res, next) => {
+  try {
+    const newMedical = new MedicalRecord(req.body)
+    const result = await medicalRecordCollection.insertOne(newMedical)
+    res.status(200).send(result)
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+
+// Get all medical records for an animal
+mainRouter.get('/animals/:animalid/medicalR', async (req, res) => {
+  try {
+    const animalID = new ObjectId(req.params.animalid);
+    const medical = await medicalRecordCollection.find({ animalId: animalID }).toArray();
+    res.status(200).send(medical);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+// Get an animal by id
+mainRouter.get('/animals/:animalid', async (req, res) => {
+  try {
+    const animalid = new ObjectId(req.params.animalid);
+    const animal = await animalCollection.findOne({ _id: animalid });
+    if (animal) {
+      res.status(200).send(animal);
+    } else {
+      res.status(404).send('Animal not found');
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+mainRouter.post('/login', async (req, res, next) => {
+  try {
+     
+      const { email, password } = req.body;
+      console.log(email,password)
+      const user = await userCollection.findOne({ email: email });
+      
+      if(user) {
+        if(password == user.password){
+          res.status(200).json({ success: true, _id: user._id });
+        } else {
+              res.status(401).json({ success: false, message: "Invalid email or password" });
+          }
+
+      } else {
+          res.status(401).json({ success: false, message: "Invalid email or password" });
+      }
+  } catch (err) {
+      next(err)
+  }
+});
+
+mainRouter.get('/users/email/:emailUser', async (req, res, next) => { 
+  try {
+    const userEmail = req.params.emailUser;
+    const user = await userCollection.findOne({ email: userEmail });
+    if (user) {
+      return res.status(200).json(user);
+    } else {
+      return res
+        .status(404)
+        .json({ error: `User with email ${req.params.userEmail} not found` });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+mainRouter.post('/newDescription', async (req, res, next) => { 
+  try {
+    let newDescription = new Description({
+      condition: req.body.condition,
+      status: req.body.status,
+      appearance: req.body.appearance,
+      packaging: req.body.packaging,
+      quantity: req.body.quantity,
+      informations: req.body.informations
+    })
+    if(req.files){
+      let path = ''
+      req.files.forEach(function(files, index, arr){
+        path = path + files.path + ','
+      })
+      path = path.substring(0, path.lastIndexOf(","))
+      newDescription.imagePaths = path
+    }
+    const result = await descriptionCollection.insertOne(newDescription)
+    await newDescription.save()
+    res.status(200).send(result)
+  } catch (err) {
+    return res.status(500).json(err);
+}
+});
 
 
 

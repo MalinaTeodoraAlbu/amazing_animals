@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const defaultPictureUrl = new URL('../media/default.jpg', import.meta.url);
+const defaultPicturePath = fileURLToPath(defaultPictureUrl);
 
 const userSchema = new mongoose.Schema({
   _id: { 
@@ -33,10 +37,12 @@ const userSchema = new mongoose.Schema({
   birthday:{
     type: Date,
   },
+  picture: {
+    type: String,
+    default: defaultPicturePath
+  }
 });
-
-
-
+userSchema.index({ email: 1 }, { unique: true }); 
 const User = mongoose.model('User', userSchema);
 
 export default User;

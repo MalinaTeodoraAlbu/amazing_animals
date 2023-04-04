@@ -5,23 +5,37 @@ import message from './media/send.png'
 import friends from './media/rating.png'
 import next from './media/right.png'
 import prev from './media/left.png'
-import pic from './media/e7f4f592f2f2f1d212ca1e225ef46360.jpg'
 import { useState, useEffect } from 'react';
 import './index.css';
 
 function MyProfile() {
   const [user, setUser] = useState(null);
+  const [currentAnimalIndex, setCurrentAnimalIndex] = useState(0);
+  const [animals, setAnimals] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
-    fetch(`http://localhost:7070/api/users/64011bd1a9af7342517cc6c7`)
-      .then(response => response.json())
-      .then(data => {
-        setUser(data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    axios.get(`http://localhost:7070/api/users/${userId}`)
+      .then(res => setUser(res.data))
+      .catch(err => console.error(err));
+
+    axios.get(`http://localhost:7070/api/users/${userId}/animals`)
+      .then(res => setAnimals(res.data))
+      .catch(err => console.error(err));
+
+    axios.get(`http://localhost:7070/api/users/${userId}/posts`)
+      .then(res => setPosts(res.data))
+      .catch(err => console.error(err));
   }, []);
+
+  const handleNext = () => {
+    setCurrentAnimalIndex((currentAnimalIndex + 1) % animals.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentAnimalIndex((currentAnimalIndex - 1 + animals.length) % animals.length);
+  };
 
   return (
     <div className="profile">
@@ -32,7 +46,9 @@ function MyProfile() {
         
           </div>
           <div className='circle2'>
-             <img src={pic} alt="Profile Picture"/>
+          {user &&
+             <img src={user.picture} alt="Profile Picture"/>
+          }
           </div>
           <div className="User_spef">
             {user &&
@@ -50,44 +66,53 @@ function MyProfile() {
           </div>
          </div>
         </div>
-        <div className="user_details_container_animals">
-        <img src={prev} />
-          <div className='container_det_animals'>
-         
-          <div className='container_det_animals_b'>
-            </div>  
-            <div className='container_det_animals_c'>
-              <AnimalsList></AnimalsList>
-            </div>  
-          </div>
-          <img src={next}/>
+        <div className='div_cards'>
+  <div className="user_details_container_animals">    </div>
+  
+ 
+  <div className="user_details_container_animals_a">
+  <img src={prev} alt="Prev" onClick={handlePrev} className="buttons" /> 
+    <div className='container_det_animals'>
+      {animals.length > 0 && (
+        <div className='container_det_animals_b'>
+          {animals.length > 0 && (
+            <img src={animals[currentAnimalIndex].picture} alt={animals[currentAnimalIndex].name} />
+          )}
         </div>
+      )}
+      <div className='container_det_animals_c'>
+        {animals.length > 0 ? (
+          <div>
+            <h3>{animals[currentAnimalIndex].name}</h3>
+          </div>
+        ) : (
+          <p>No animals found.</p>
+        )}
+      </div>  
+    </div>
+    <img src={next} alt="Next" onClick={handleNext} className="buttons" />
+  </div>
+
+</div>
+     
       </div>
-      <div className="user_posts"></div>
+      <div className="user_posts">
+        <div className="user_posts_a">
+        <div className="posts_container">
+  {posts.map(post => (
+    <div className="post_container" key={post._id}>
+      <img src={post.picture} alt={post.title} />
+      <h3>{post.title}</h3>
+    </div>
+  ))}
+</div>
+</div> 
+    </div>  
+
     </div>  
   );
 }
 
 
 
-function AnimalsList() {
-  const [animals, setAnimals] = useState([]);
-  const userID = "64011bd1a9af7342517cc6c7"; 
-
-  useEffect(() => {
-    axios.get(`http://localhost:7070/api/users/${userID}/animals`)
-      .then(res => setAnimals(res.data))
-      .catch(err => console.error(err));
-  }, [userID]);
-
-  return (
-    <div>
-      {animals.map(animal => (
-        <div key={animal.id}>
-          <h3>{animal.name}</h3>
-        </div>
-      ))}
-    </div>
-  );
-}
 export default MyProfile;

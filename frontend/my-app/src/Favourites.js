@@ -2,6 +2,7 @@ import Navbar from "./Navbar";
 import './index.css';
 
 function Favourites() {
+  const userId = localStorage.getItem('userId');
   return (
     <div >
      <div className="ListOfFavourites_container">
