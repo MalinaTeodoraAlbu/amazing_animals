@@ -5,6 +5,8 @@ import message from './media/send.png'
 import friends from './media/rating.png'
 import next from './media/right.png'
 import prev from './media/left.png'
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
 import { useState, useEffect } from 'react';
 import './index.css';
 
@@ -14,6 +16,7 @@ function MyProfile() {
   const [animals, setAnimals] = useState([]);
   const [posts, setPosts] = useState([]);
   const userId = localStorage.getItem('userId');
+  const [postID, setPostID] = useState(null);
 
   useEffect(() => {
     axios.get(`http://localhost:7070/api/users/${userId}`)
@@ -37,13 +40,20 @@ function MyProfile() {
     setCurrentAnimalIndex((currentAnimalIndex - 1 + animals.length) % animals.length);
   };
 
+  const handleView = (event) => {
+
+    window.location.href = `/viewPost/${postID}`;
+  };
+
   return (
     <div className="profile">
       <div className="user_details"> 
         <div className="user_details_container">
          <div className='usDC'>
           <div className='circle'>
-        
+          <IconButton aria-label="edit" color="secondary" >
+              <EditIcon fontSize="small"  />
+            </IconButton>
           </div>
           <div className='circle2'>
           {user &&
@@ -100,9 +110,9 @@ function MyProfile() {
         <div className="user_posts_a">
         <div className="posts_container">
   {posts.map(post => (
-    <div className="post_container" key={post._id}>
+    <div className="post_container" key={post._id} >
       <img src={post.picture} alt={post.title} />
-      <h3>{post.title}</h3>
+      <button onClick={() => { window.location.href = `/viewPost/${post._id}` }}>View post</button>
     </div>
   ))}
 </div>

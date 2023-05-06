@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import AnimalProfile from "./function/AnimalProfile";
 import MedicalRecordsList from "./function/MedicalRecordsList";
-import { useParams } from 'react-router-dom';
+
 
 function MyAnimals() {
   const userId = localStorage.getItem('userId');
@@ -34,13 +34,29 @@ function MyAnimals() {
       .catch(err => console.error(err));
   };
   
+  const addAnimal = async (event) => {
+    event.preventDefault();
+    window.location.href = '/addNewAnimal' ;
+  }
+
+  const addNewMedicalRecord = async (event) => {
+    event.preventDefault();
+    
+    window.location.href = `/addNewMedicalRecord/${selectedAnimal._id}`;
+  }
+
+  
 
   return (
     <div className="Animals_container">
 
     <div className="list_of_animals">
     <div className="Animals_details_container_border">
-              <h3>My animals</h3>
+      <h3>My animals</h3>
+      <div className="button_container">
+        <button className="add_new_animal" onClick={addAnimal}>Add New Animal</button>
+        
+      </div>
     </div>
     <div className="list_of_animals_">
             {animals.map(animal => (
@@ -54,8 +70,12 @@ function MyAnimals() {
          <div className="medical_details"> 
          <div className="medical_details_container"> 
          <div className="Animals_details_container_border">
-              <h3>Medical Records</h3>
-            </div> 
+      <h3>Medical Records</h3>
+      <div className="button_container">
+        <button className="add_new_animal" onClick={addNewMedicalRecord}>Add New Medical Record</button>
+        
+      </div>
+    </div> 
 
             <div className="records_container">
             <MedicalRecordsList medicalRecords={medicalRecords} />
@@ -76,8 +96,11 @@ function MyAnimals() {
         <div className="medical_details"> 
          <div className="medical_details_container"> 
          <div className="Animals_details_container_border">
-              <h3>Medical Records</h3>
-            </div> 
+      <h3>Medical Records</h3>
+      <div className="button_container">
+        
+      </div>
+    </div> 
 
             <div className="records_container">
             <h3>0 medical records</h3>

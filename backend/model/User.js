@@ -37,9 +37,9 @@ const userSchema = new mongoose.Schema({
   birthday:{
     type: Date,
   },
-  picture: {
-    type: String,
-    default: defaultPicturePath
+  imagePaths: { type: String },
+  userType: {
+    type: String
   }
 });
 userSchema.index({ email: 1 }, { unique: true }); 

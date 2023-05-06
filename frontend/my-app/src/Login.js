@@ -12,7 +12,6 @@ function Login() {
   const idUser = useSelector(state => state.idUser);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [name, setName] = useState("");
   const [emailReg, setEmailReg] = useState("");
   const [passwordReg, setPasswordReg] = useState("");

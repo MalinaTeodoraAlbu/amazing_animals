@@ -1,9 +1,7 @@
 import mongoose from 'mongoose';
 
 const animalSchema = new mongoose.Schema({
-  id: {
-    type: Number
-  },
+
   name: {
     type: String,
     required: true

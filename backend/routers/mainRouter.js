@@ -5,6 +5,7 @@ import Post from '../model/Post.js';
 import Comment from '../model/Comment.js';
 import PostComment from '../model/JoinPostComment.js';
 import MedicalRecord from '../model/MedicalRecord.js';
+import SavedPost from '../model/SavedPost.js';
 import mongoose from 'mongoose';
 import Animal  from '../model/Animals.js';
 const mainRouter = express.Router();
@@ -36,8 +37,23 @@ const commentCollection = dbo.collection('Comment');
 const commentPostCollection = dbo.collection('JoinPostComment');
 const animalCollection = dbo.collection('Animal');
 const medicalRecordCollection = dbo.collection('Medical Record');
+const savedPostsCollection = dbo.collection('Saved Posts');
+const FriendsCollection = dbo.collection('Friends');
 
+import fs from 'fs';
+import path from 'path';
 
+const deleteImages = (imagePaths) => {
+  imagePaths.split(',').forEach((path) => {
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(`Deleted file ${path}`);
+      }
+    });
+  });
+};
 
 // Get all users
 mainRouter.get('/users', async (req, res) => {
@@ -65,6 +81,22 @@ mainRouter.get('/users/:userid', async (req, res) => {
   }
 });
 
+// Get an animal by id
+mainRouter.get('/animals/:animalID', async (req, res) => {
+  try {
+    const animalID = new ObjectId(req.params.animalID);
+    const animal = await animalCollection.findOne({ _id: animalID });
+    if (animal) {
+      res.status(200).send(animal);
+    } else {
+      res.status(404).send('User not found');
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
 // Create a new user
 mainRouter.post('/users', async (req, res, next) => {
   try {
@@ -77,21 +109,71 @@ mainRouter.post('/users', async (req, res, next) => {
   }
 });
 
-//update user 
-mainRouter.put('/users/:id', async (req, res) => {
+
+
+mainRouter.put('/animals/:id', async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.status(200).send(updatedUser);
+    const id = new ObjectId(req.params.id);
+      const body = req.body;
+      const updateAnimal = await animalCollection.findOneAndUpdate(
+        { _id: id },
+        { $set: body },
+        { returnDocument : "after" },
+        { returnOriginal: false }
+      );
+      if (!updateAnimal.value) {
+        return res.status(404).send('Animal not found');
+      }
+      res.status(200).send(updateAnimal.value);
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
 
+mainRouter.put('/posts/:id', async (req, res) => {
+  try {
+    const id = new ObjectId(req.params.id);
+      const body = req.body;
+      const updatePost = await postCollection.findOneAndUpdate(
+        { _id: id },
+        { $set: body },
+        { returnDocument : "after" },
+        { returnOriginal: false }
+      );
+      if (!updatePost.value) {
+        return res.status(404).send('Post not found');
+      }
+      res.status(200).send(updatePost.value);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+mainRouter.put('/comments/:id', async (req, res) => {
+  try {
+    const id = new ObjectId(req.params.id);
+      const body = req.body;
+      const updateComment = await commentCollection.findOneAndUpdate(
+        { _id: id },
+        { $set: body },
+        { returnDocument : "after" },
+        { returnOriginal: false }
+      );
+      if (!updateComment.value) {
+        return res.status(404).send('Post not found');
+      }
+      res.status(200).send(updateComment.value);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 //delete user
 mainRouter.delete('/users/:id', async (req, res) => {
   try {
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    const id = new ObjectId(req.params.id);
+    const deletedUser = await User.findByIdAndDelete( { _id: id });
     res.status(200).send(deletedUser);
   } catch (error) {
     res.status(500).send(error);
@@ -99,6 +181,54 @@ mainRouter.delete('/users/:id', async (req, res) => {
 });
 
 
+
+
+//delete animal
+mainRouter.delete('/animals/:id', async (req, res) => {
+  try {
+    const id = new ObjectId(req.params.id);
+    const deleteAnimal = await animalCollection.deleteOne({ _id: id});
+    res.status(200).send(deleteAnimal);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+//delete savedPost
+mainRouter.delete('/savedPost/:id', async (req, res) => {
+  try {
+    const id = new ObjectId(req.params.id);
+    const savedPost = await savedPostsCollection.deleteOne({ _id: id});
+    res.status(200).send(savedPost);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+//delete post
+mainRouter.delete('/posts/:id', async (req, res) => {
+  try {
+    const id = new ObjectId(req.params.id);
+    const post = await postCollection.deleteOne({ _id: id});
+    res.status(200).send(post);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+//delete comment 
+mainRouter.delete('/comments/:id', async (req, res) => {
+  try {
+    const id = new ObjectId(req.params.id);
+    const comment = await commentCollection.deleteOne({ _id: id});
+    res.status(200).send(comment);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 // Get all posts
 mainRouter.get('/posts', async (req, res) => {
@@ -123,42 +253,6 @@ mainRouter.post('/posts', async (req, res, next) => {
 });
 
 
-// Get a post by id
-mainRouter.get('/posts/:id', async (req, res) => {
-  try {
-    const post = await postCollection.findOne({ _id: ObjectId(req.params.id) });
-    if (post) {
-      res.status(200).send(post);
-    } else {
-      res.status(404).send('Post not found');
-    }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-
-//update post 
-mainRouter.put('/posts/:id', async (req, res) => {
-  try {
-    const updatePost = await Post.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.status(200).send(updatePost);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-
-//delete post
-mainRouter.delete('/posts/:id', async (req, res) => {
-  try {
-    const deletedPost = await Post.findByIdAndDelete(req.params.id);
-    res.status(200).send(deletedPost);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
 // Get all comments
 mainRouter.get('/comments', async (req, res) => {
   try {
@@ -180,6 +274,19 @@ mainRouter.post('/comments', async (req, res) => {
   }
 });
 
+
+mainRouter.post('/savedPost', async (req, res) => {
+  try {
+    const newSavedPost = new SavedPost(req.body);
+    const result = await savedPostsCollection.insertOne(newSavedPost);
+    res.status(200).send(result);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+
+
 // Get a comment by id
 mainRouter.get('/comments/:id', async (req, res) => {
   try {
@@ -194,91 +301,14 @@ mainRouter.get('/comments/:id', async (req, res) => {
   }
 });
 
-// Update a comment
-mainRouter.put('/comments/:id', async (req, res) => {
+// Get a saved post by id
+mainRouter.get('/savedPost/:id', async (req, res) => {
   try {
-    const updatedComment = await commentCollection.findOneAndUpdate({ _id: ObjectId(req.params.id) }, { $set: req.body }, { returnOriginal: false });
-    if (updatedComment) {
-      res.status(200).send(updatedComment);
+    const savedPost = await savedPostsCollection.findOne({ _id: ObjectId(req.params.id) });
+    if (savedPost) {
+      res.status(200).send(savedPost);
     } else {
-      res.status(404).send('Comment not found');
-    }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// Delete a comment
-mainRouter.delete('/comments/:id', async (req, res) => {
-  try {
-    const deletedComment = await commentCollection.findOneAndDelete({ _id: ObjectId(req.params.id) });
-    if (deletedComment) {
-      res.status(200).send(deletedComment);
-    } else {
-      res.status(404).send('Comment not found');
-    }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// Get all comments for a user
-mainRouter.get('/users/:userid/comments', async (req, res) => {
-  try {
-    const comments = await commentCollection.find({ userid: req.params.userid }).toArray();
-    res.status(200).send(comments);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// Create a new comment for a user
-mainRouter.post('/users/:userid/comments', async (req, res) => {
-  try {
-    const newComment = new Comment({ ...req.body, userid: req.params.userid });
-    const result = await commentCollection.insertOne(newComment);
-    res.status(200).send(result);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
-// Get a comment by id for a user
-mainRouter.get('/users/:userid/comments/:id', async (req, res) => {
-  try {
-    const comment = await commentCollection.findOne({ _id: ObjectId(req.params.id), userid: req.params.userid });
-    if (comment) {
-      res.status(200).send(comment);
-    } else {
-      res.status(404).send('Comment not found');
-    }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// Update a comment for a user
-mainRouter.put('/users/:userid/comments/:id', async (req, res) => {
-  try {
-    const updatedComment = await commentCollection.findOneAndUpdate({ _id: ObjectId(req.params.id), userid: req.params.userid }, { $set: req.body }, { returnOriginal: false });
-    if (updatedComment) {
-      res.status(200).send(updatedComment);
-    } else {
-      res.status(404).send('Comment not found');
-    }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// Delete a comment for a user
-mainRouter.delete('/users/:userid/comments/:id', async (req, res) => {
-  try {
-    const deletedComment = await commentCollection.findOneAndDelete({ _id: ObjectId(req.params.id), userid: req.params.userid });
-    if (deletedComment) {
-      res.status(200).send(deletedComment);
-    } else {
-      res.status(404).send('Comment not found');
+      res.status(404).send('Saved Post not found');
     }
   } catch (error) {
     res.status(500).send(error);
@@ -286,32 +316,14 @@ mainRouter.delete('/users/:userid/comments/:id', async (req, res) => {
 });
 
 
-// Create a new post-comment relationship
-mainRouter.post('/posts/:postId/comments/:commentId', async (req, res) => {
+mainRouter.get('/comments/:postid/post', async (req, res) => {
   try {
-   
-    const post = await postCollection.findOne({ _id: req.params.postId });
-    if (!post) {
-      return res.status(404).send('Post not found');
-    }
-
-    
-    const comment = await commentCollection.findOne({ _id: req.params.commentId });
-    if (!comment) {
-      return res.status(404).send('Comment not found');
-    }
-
-
-    const newPostComment = new PostComment({
-      postId: req.params.postId,
-      commentId: req.params.commentId
-    });
-    const result = await commentPostCollection.insertOne(newPostComment);
-    res.status(200).send(result);
+    const postId = new ObjectId(req.params.postid);
+    const comment = await commentCollection.find({ postID: postId }).toArray();
+    res.status(200).send(comment);
   } catch (error) {
     res.status(500).send(error);
   }
-
 });
 
 //get all animals 
@@ -322,6 +334,21 @@ mainRouter.get('/users/:userId/animals', async (req, res) => {
     const animals = await animalCollection.find({userid :userId}).toArray();
 
     res.status(200).json(animals);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+//get all saved posts 
+mainRouter.get('/users/:userId/savedPosts', async (req, res) => {
+  try {
+    const userId = new ObjectId(req.params.userId);
+    
+    const savedPosts = await savedPostsCollection.find({userID :userId}).toArray();
+
+    res.status(200).json(savedPosts);
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
@@ -366,11 +393,13 @@ mainRouter.post('/medicalRecord', async (req, res, next) => {
   try {
     const newMedical = new MedicalRecord(req.body)
     const result = await medicalRecordCollection.insertOne(newMedical)
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.status(200).send(result)
   } catch (err) {
     res.status(500).send(err);
   }
 });
+
 
 
 // Get all medical records for an animal
@@ -385,6 +414,7 @@ mainRouter.get('/animals/:animalid/medicalR', async (req, res) => {
 });
 
 
+
 // Get an animal by id
 mainRouter.get('/animals/:animalid', async (req, res) => {
   try {
@@ -394,6 +424,22 @@ mainRouter.get('/animals/:animalid', async (req, res) => {
       res.status(200).send(animal);
     } else {
       res.status(404).send('Animal not found');
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+// Get an post by id
+mainRouter.get('/posts/:postid', async (req, res) => {
+  try {
+    const postID = new ObjectId(req.params.postid);
+    const post = await postCollection.findOne({ _id: postID });
+    if (post) {
+      res.status(200).send(post);
+    } else {
+      res.status(404).send('Post not found');
     }
   } catch (error) {
     res.status(500).send(error);

@@ -2,11 +2,12 @@ import mongoose from 'mongoose';
 
 
 const postSchema = new mongoose.Schema({
-  title: {
+  
+  content: {
     type: String,
     required: true
   },
-  content: {
+  location: {
     type: String,
     required: true
   },
@@ -16,7 +17,6 @@ const postSchema = new mongoose.Schema({
   },
   tag: {
     type: String,
-    required: true
   },
   datePosted: {
     type: Date,
@@ -30,7 +30,30 @@ const postSchema = new mongoose.Schema({
   picture: {
     type: String,
     required: true
+  },
+  name: {
+    type: String,
+  },
+  species: {
+    type: String,
+  },
+  sex: {
+    type: String,
+  },
+  color: {
+    type: String,
+  },
+  birthday: {
+    type: Date,
+  },
+  weight: {
+    type: Number,
+  },
+  sterilizer: {
+    type: Boolean,
+    default: false
   }
+
 });
 
 

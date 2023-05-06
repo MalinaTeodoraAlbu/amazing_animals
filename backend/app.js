@@ -11,10 +11,9 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(cors());
 
+
 app.use("/api", mainRouter);
-
-
-
+app.use('/uploads', express.static('uploads'));
 
 app.listen(7070, async () => {
     console.log("Express port 7070")

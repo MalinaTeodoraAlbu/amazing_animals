@@ -5,6 +5,10 @@ import SearchBar from "./SearchBar";
 function Feed() {
   const userId = localStorage.getItem('userId');
 
+  const addNewPost = async (event) => {
+    event.preventDefault();
+    window.location.href = '/addNewPost' ;
+  }
   return (
     <div className="containerFeed">
     <div className="Feed">
@@ -16,12 +20,9 @@ function Feed() {
     <input type="text" class="post_input" placeholder="Say something"/>
   </div>
   <div class="buttons_feed">
-    <button class="add-animal-btn">Add a post</button>
+    <button class="add-animal-btn" onClick={addNewPost}>Add a post</button>
   </div>
 </div>
-
-
-
 
       <div className="Feed_container">
         <PostsList></PostsList>

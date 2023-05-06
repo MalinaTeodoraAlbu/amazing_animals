@@ -15,13 +15,17 @@ function AddNewAnimal() {
   const [weight,setWeight] = useState('');
   const [picture,setPicture] = useState('');
   const [birthday, setBirthday] = useState("");
-
+  const [sterilizer, setSterilizer] = useState("");
 
   const handlePictureChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setPictureSrc(URL.createObjectURL(file));
-      setPicture(file);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setPictureSrc(reader.result);
+        setPicture(file);
+      }
     }
   };
 
@@ -59,6 +63,7 @@ function AddNewAnimal() {
             weight,
             picture: reader.result,
             birthday,
+            sterilizer
           };
 
         if(name === ''){
@@ -109,7 +114,7 @@ function AddNewAnimal() {
             body: JSON.stringify(animal),
           });
           
-          if(res.status === 200){ //sucess register
+          if(res.status === 200){ 
             toast.success("Succesfully!", {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 1000,
@@ -117,6 +122,7 @@ function AddNewAnimal() {
                 marginTop: "5rem"
               }
             });
+            window.location.href = '/myAnimals' ;
           }else {
             toast.error("Internal server error", {
               position: toast.POSITION.TOP_RIGHT,
@@ -127,12 +133,18 @@ function AddNewAnimal() {
             });
           }}}
 
+          const handleCancel = async (event) => {
+            event.preventDefault();
+            window.location.href = '/myAnimals' ;
+          }
+
   return (
     <div className="add-new-animal">
         <ToastContainer />
     <div className="container_add_new_animal">
     <div className="Animals_details_container_border">
       <h3>Add New Animal</h3>
+      <button className="save_button" onClick={handleCancel}>Cancel</button>
       <button className="save_button" onClick={handleSave}>Save</button>
       </div>
       <div className="container_add_new_animal_">
@@ -163,8 +175,9 @@ function AddNewAnimal() {
           <input type="date" id="birthday" name="birthday" value={birthday} onChange={(e) => setBirthday(e.target.value)} />
           <div className="checkboxes_a">
             <label htmlFor="sterilizer">Sterile:</label>
-            <input type="checkbox" id="sterilizer" name="sterilizer" value="true"
+            <input type="checkbox" id="sterilizer" name="sterilizer" value={sterilizer}
                     onChange={(e) => {
+                    setSterilizer(e.target.checked);
                     const notificationCheckbox = document.getElementById("notification");
                     notificationCheckbox.disabled = e.target.checked;
                     if (e.target.checked) {
