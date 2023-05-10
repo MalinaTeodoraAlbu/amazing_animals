@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const savedPostSchema = new mongoose.Schema({
     userID: {
@@ -19,4 +19,4 @@ const savedPostSchema = new mongoose.Schema({
   const SavedPost = mongoose.model('SavedPost', savedPostSchema);
   
   
-  export default SavedPost;
+  module.exports =  SavedPost;

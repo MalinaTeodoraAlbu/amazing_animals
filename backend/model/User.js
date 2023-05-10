@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
-import path from 'path';
-import { fileURLToPath } from 'url';
+const mongoose = require('mongoose');
+const path = require('path');
+const { fileURLToPath } = require('url');
 
-const defaultPictureUrl = new URL('../media/default.jpg', import.meta.url);
+const defaultPictureUrl = new URL('../media/default.jpg', 'file://' + path.resolve(__dirname, '..'));
 const defaultPicturePath = fileURLToPath(defaultPictureUrl);
 
 const userSchema = new mongoose.Schema({
@@ -37,12 +37,13 @@ const userSchema = new mongoose.Schema({
   birthday:{
     type: Date,
   },
-  imagePaths: { type: String },
   userType: {
     type: String
-  }
+  },
+  imagePaths: { type: String }
 });
+
 userSchema.index({ email: 1 }, { unique: true }); 
 const User = mongoose.model('User', userSchema);
 
-export default User;
+module.exports = User;

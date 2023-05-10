@@ -146,7 +146,8 @@ function User({ userid, postID }) {
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [savedPostId, setSavedPostId] = useState(null);
-  
+  const picture = user ? `http://localhost:7070/${user.imagePaths}` : '';
+
   useEffect(() => {
     axios
       .get(`http://localhost:7070/api/users/${userid}`)
@@ -222,7 +223,7 @@ function User({ userid, postID }) {
   return (
     <div>
       <div className="user-info_b">
-        <img src={user.picture} alt="Profile Picture" />
+        <img src={picture} alt="Profile Picture" />
         <p className="user-name">{user.name}</p>
         <div className='fav_iconIhe'>
         <label className="like">

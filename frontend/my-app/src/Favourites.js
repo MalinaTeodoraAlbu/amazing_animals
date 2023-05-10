@@ -92,7 +92,7 @@ function ListOfFav(props) {
         </div>
          </div>
         <div className="img_fav_purple"> 
-        <img src={post.picture}></img>
+        <img src={`http://localhost:7070/${post.imagePaths}`}></img>
         </div>
       </div>
     ))}

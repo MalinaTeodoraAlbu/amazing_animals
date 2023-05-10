@@ -1,16 +1,14 @@
-import express from 'express';
-import { ObjectId } from 'mongodb';
-import User from '../model/User.js';
-import Post from '../model/Post.js';
-import Comment from '../model/Comment.js';
-import PostComment from '../model/JoinPostComment.js';
-import MedicalRecord from '../model/MedicalRecord.js';
-import SavedPost from '../model/SavedPost.js';
-import mongoose from 'mongoose';
-import Animal  from '../model/Animals.js';
+const express = require('express');
+const { ObjectId } = require('mongodb');
+const User = require('../model/User');
+const Post = require('../model/Post');
+const Comment = require('../model/Comment');
+const MedicalRecord = require('../model/MedicalRecord');
+const SavedPost = require('../model/SavedPost');
+const mongoose = require('mongoose');
 const mainRouter = express.Router();
 
-import { MongoClient } from 'mongodb';
+const { MongoClient } = require('mongodb');
 
 const url = "mongodb+srv://albumalina26:Malina260401@amazinganimalscluster.iooj9n4.mongodb.net/?retryWrites=true&w=majority";
 mongoose.connect(
@@ -34,52 +32,10 @@ const dbo = mongoClient.db('AmazingAnimalsDB')
 const userCollection = dbo.collection('User');
 const postCollection = dbo.collection('Post');
 const commentCollection = dbo.collection('Comment');
-const commentPostCollection = dbo.collection('JoinPostComment');
 const animalCollection = dbo.collection('Animal');
 const medicalRecordCollection = dbo.collection('Medical Record');
 const savedPostsCollection = dbo.collection('Saved Posts');
 const FriendsCollection = dbo.collection('Friends');
-
-import fs from 'fs';
-import path from 'path';
-
-const deleteImages = (imagePaths) => {
-  imagePaths.split(',').forEach((path) => {
-    fs.unlink(path, (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log(`Deleted file ${path}`);
-      }
-    });
-  });
-};
-
-// Get all users
-mainRouter.get('/users', async (req, res) => {
-  try {
-    const users = await userCollection.find().toArray();
-    res.status(200).send(users);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-
-// Get a user by id
-mainRouter.get('/users/:userid', async (req, res) => {
-  try {
-    const userId = new ObjectId(req.params.userid);
-    const user = await userCollection.findOne({ _id: userId });
-    if (user) {
-      res.status(200).send(user);
-    } else {
-      res.status(404).send('User not found');
-    }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
 
 // Get an animal by id
 mainRouter.get('/animals/:animalID', async (req, res) => {
@@ -97,17 +53,8 @@ mainRouter.get('/animals/:animalID', async (req, res) => {
 });
 
 
-// Create a new user
-mainRouter.post('/users', async (req, res, next) => {
-  try {
-    const newUsers = new User(req.body)
-    const result = await userCollection.insertOne(newUsers)
-    await newUsers.save();
-    res.status(200).send(result)
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
+
+
 
 
 
@@ -131,24 +78,7 @@ mainRouter.put('/animals/:id', async (req, res) => {
 });
 
 
-mainRouter.put('/posts/:id', async (req, res) => {
-  try {
-    const id = new ObjectId(req.params.id);
-      const body = req.body;
-      const updatePost = await postCollection.findOneAndUpdate(
-        { _id: id },
-        { $set: body },
-        { returnDocument : "after" },
-        { returnOriginal: false }
-      );
-      if (!updatePost.value) {
-        return res.status(404).send('Post not found');
-      }
-      res.status(200).send(updatePost.value);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+
 
 mainRouter.put('/comments/:id', async (req, res) => {
   try {
@@ -169,16 +99,6 @@ mainRouter.put('/comments/:id', async (req, res) => {
   }
 });
 
-//delete user
-mainRouter.delete('/users/:id', async (req, res) => {
-  try {
-    const id = new ObjectId(req.params.id);
-    const deletedUser = await User.findByIdAndDelete( { _id: id });
-    res.status(200).send(deletedUser);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
 
 
 
@@ -207,16 +127,7 @@ mainRouter.delete('/savedPost/:id', async (req, res) => {
 });
 
 
-//delete post
-mainRouter.delete('/posts/:id', async (req, res) => {
-  try {
-    const id = new ObjectId(req.params.id);
-    const post = await postCollection.deleteOne({ _id: id});
-    res.status(200).send(post);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+
 
 
 //delete comment 
@@ -230,27 +141,7 @@ mainRouter.delete('/comments/:id', async (req, res) => {
   }
 });
 
-// Get all posts
-mainRouter.get('/posts', async (req, res) => {
-  try {
-    const posts = await postCollection.find().toArray();
-    res.status(200).send(posts);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
 
-// Create a new post
-mainRouter.post('/posts', async (req, res, next) => {
-  try {
-    const newPost = new Post(req.body)
-    const result = await postCollection.insertOne(newPost)
- 
-    res.status(200).send(result)
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
 
 
 // Get all comments
@@ -376,16 +267,6 @@ mainRouter.post('/animals/:userid', async (req, res) => {
   }
 });
 
-// Get all posts for a user
-mainRouter.get('/users/:userid/posts', async (req, res) => {
-  try {
-    const userId = new ObjectId(req.params.userid);
-    const posts = await postCollection.find({ userid: userId }).toArray();
-    res.status(200).send(posts);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
 
 
 // Create a new medical record
@@ -431,20 +312,7 @@ mainRouter.get('/animals/:animalid', async (req, res) => {
 });
 
 
-// Get an post by id
-mainRouter.get('/posts/:postid', async (req, res) => {
-  try {
-    const postID = new ObjectId(req.params.postid);
-    const post = await postCollection.findOne({ _id: postID });
-    if (post) {
-      res.status(200).send(post);
-    } else {
-      res.status(404).send('Post not found');
-    }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+
 
 mainRouter.post('/login', async (req, res, next) => {
   try {
@@ -484,32 +352,7 @@ mainRouter.get('/users/email/:emailUser', async (req, res, next) => {
   }
 });
 
-mainRouter.post('/newDescription', async (req, res, next) => { 
-  try {
-    let newDescription = new Description({
-      condition: req.body.condition,
-      status: req.body.status,
-      appearance: req.body.appearance,
-      packaging: req.body.packaging,
-      quantity: req.body.quantity,
-      informations: req.body.informations
-    })
-    if(req.files){
-      let path = ''
-      req.files.forEach(function(files, index, arr){
-        path = path + files.path + ','
-      })
-      path = path.substring(0, path.lastIndexOf(","))
-      newDescription.imagePaths = path
-    }
-    const result = await descriptionCollection.insertOne(newDescription)
-    await newDescription.save()
-    res.status(200).send(result)
-  } catch (err) {
-    return res.status(500).json(err);
-}
-});
 
-
-
-export default mainRouter;
+module.exports = {mainRouter, userCollection, savedPostsCollection, 
+  postCollection, commentCollection, FriendsCollection,
+   medicalRecordCollection, animalCollection};

@@ -69,13 +69,14 @@ function EditPost() {
               setName(data.name)
               setSpecies(data.species)
               setSex(data.sex)
-              setPicture(data.picture)
+              setPicture(data.imagePaths)
               setColor(data.color)
-              setPictureSrc(data.picture);
+              setPicture(`http://localhost:7070/${data.imagePaths}`);
               setWeight(data.weight)
               setBirthday(data.birthday)
               setSterilizer(data.sterilizer)      
-              setLocation(data.location)       
+              setLocation(data.location)   
+              console.log(picture)    
             });
         }
     }, [postID])
@@ -89,117 +90,43 @@ function EditPost() {
   
     const handlePictureChange = (event) => {
       const file = event.target.files[0];
+      const reader = new FileReader();
+      setPictureSrc(event.target.files[0])
+      
+      reader.onloadend = () => {
+        setPicture(reader.result);
+        
+      };
       if (file) {
-        const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          setPictureSrc(reader.result);
-          setPicture(file);
-        }
+        console.log(file)
       }
     };
   
 
     const handleSubmit = async (event) => {
       event.preventDefault();
-      if (!picture) {
-        toast.error('Please select an image', {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: '5rem',
-          },
-        });
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.readAsDataURL(picture);
-      reader.onloadend = async () => {
-        const post = {
-          userid : userId,
-          title, 
-          content,
-          category,
-          tag,
-          name,
-          species,
-          color,
-          sex,
-          location,
-          weight,
-          picture:reader.result,
-          birthday,
-          sterilizer
-        }
-        if(title === ''){
-          toast.error("Empty  title", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          return;
-        }
-        if(content === ''){
-          toast.error("Empty  description", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          return;
-        }
-        if(category === ''){
-          toast.error("Empty  category", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          return;
-        }
-        if(tag === ''){
-          toast.error("Empty  tag", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          return;
-        }
-      if(category === 'Lovely') {
-        const res = await fetch(`http://localhost:7070/api/posts/${postID}`, {
-          method: "put",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(post),
-        });
+      const formData = new FormData();
+      formData.append('imagePaths', pictureSrc);
+      formData.append('userid', userId);
+      formData.append('content', content);
+      formData.append('location', location);
+      formData.append('category', category);
+      formData.append('tag', tag);
+      formData.append('name', name);
+      formData.append('species', species);
+      formData.append('color', color);
+      formData.append('sex', sex);
+      formData.append('weight', weight);
+      formData.append('birthday', birthday);
+      formData.append('sterilizer', sterilizer);
+      if (category === 'Lovely') {
+        const res = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
         
-        if(res.status === 200){ 
-          toast.success("Succesfully!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 1000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          window.location.href = '/feed' ;
-        
-        }else {
-          toast.error("Internal server error", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
+        if(res.status === 200){
+          window.location.href = `/feed`;
         }
+        
       }
       else  {
         const animal = {
@@ -212,46 +139,7 @@ function EditPost() {
           birthday,
           sterilizer
         };
-        if(name === ''){
-          toast.error("Empty  name", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          return;
-        }
-        if(species === ''){
-          toast.error("Empty species", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          return;
-        }
-        if(sex === '-'){
-          toast.error("Empty sex", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          return;
-        }
-        if(weight === ''){
-          toast.error("Empty weight", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          return;
-        }
+       
         if(saveAnimal===true){
           const res = await fetch(`http://localhost:7070/api/animals/${userId}`, {
           method: "post",
@@ -261,43 +149,18 @@ function EditPost() {
           body: JSON.stringify(animal),
         });
         
-        const res_post = await fetch(`http://localhost:7070/api/posts/${postID}`, {
-          method: "put",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(post),
-        });
+        const res_post = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
         
-        if(res.status === 200 && res_post.status === 200){ 
-          toast.success("Succesfully!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 1000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          window.location.href = '/feed' ;
-        }else {
-          toast.error("Internal server error", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });}
+        if(res_post.status === 200){
+          window.location.href = `/feed`;
+        }
         
         }
         
-        const res = await fetch(`http://localhost:7070/api/posts/${postID}`, {
-          method: "put",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(post),
-        });
+        const res_post = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
         
-        if(res.status === 200){ 
+        
+        if(res_post.status === 200){ 
           toast.success("Succesfully!", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 1000,
@@ -316,7 +179,7 @@ function EditPost() {
           });
       }
       }
-    }
+    
     };
   
   
@@ -329,7 +192,7 @@ function EditPost() {
          <div className="add-new-post-picture-side">
          <label htmlFor="picture">Picture:</label>
             <div className="rect-image-add">
-              <img src={pictureSrc} alt="animal picture" />
+              <img src={picture} alt="animal picture" />
             </div>
             <input type="file" id="picture" name="picture" onChange={handlePictureChange} />
       </div>

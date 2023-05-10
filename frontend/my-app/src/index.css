@@ -81,6 +81,18 @@ margin-left: 60%;
 
 .user_info img {
   width: 20%;
+  min-width: 80px;
+  max-width: 80px;
+  max-height: 80px;
+  border-radius: 50%;
+  margin-right: 5%;
+}
+
+.user-info_b img {
+  width: 20%;
+  min-width: 80px;
+  max-width: 80px;
+  max-height: 80px;
   border-radius: 50%;
   margin-right: 5%;
 }
@@ -783,7 +795,7 @@ height: 100%;
 }
 
 .Animals_details_container_ .Animals_details_container_border button{
-  float: right;
+
   right: 0;
   width: 10%;
   margin-top: 1.5%;
@@ -1121,8 +1133,10 @@ width: 100%;
 
 
 .circle2 img {
-  width: 100%;
-  height: auto;
+  max-width: 180px;
+  min-width: 180px;
+  min-height: 180px;
+  max-height: 180px;
   border-radius: 50%;
   display: block;
 }
@@ -1257,84 +1271,108 @@ width: 100%;
 .buttons{
   opacity: 20%;
 }
-/* Settings */
-.settings {
-  position: fixed;
-  height: 80%;
-  width: 90%; 
-  border-radius: 20px;
-  margin-left: 10%;
-  display: flex;
-}
 
-.setttings_container {
-  background-color: #F6F6F6;
-  height: 100%;
-  width: 20%;
-  border-radius: 20px;
-  margin-right: 1%;
+
+/* Settings */
+
+.settings {
+  min-height: 560px;
+  max-height: 560px;
   display: flex;
   flex-direction: column;
-  
-  align-items: center;
+  position: relative;
+  width: 85%;
+  height: 300px;
+  background: #f1f1f1;
+  margin-left: 8%;
+  word-break: break-all;
+  border: 1px solid rgba(0, 0, 0, 0.274);
+  border-radius: 0 0 20px 20px;
 }
 
-.settings_button {
-  margin-top: 5%;
-  background-color: #E5E0FF;
-  height: 50px;
-  width: 80%;
-  border-radius: 20px;
+
+.bloc-tabs {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: bold;
-  color: #555;
+}
+
+.tabs {
+  padding: 15px;
+  text-align: center;
+  width: 50%;
+  background: rgba(128, 128, 128, 0.075);
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.274);
+  box-sizing: content-box;
+  position: relative;
+  outline: none;
 }
 
-.settings_button:hover {
-  background-color: #DDD;
+.tabs:not(:last-child){
+  border-right: 1px solid rgba(0, 0, 0, 0.274);
 }
 
-.settings_button_logout {
-  background-color: #E5E0FF;
-  height: 80px;
-  width: 80%;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: bold;
-  color: #555;
-  cursor: pointer;
-  margin-top: 70%;
-  transition: all 0.3s ease-in-out;
+.active-tabs  {
+  background: white;
+  border-bottom: 1px solid transparent;
 }
 
-.settings_button_logout:hover {
-  background-color: #DDD;
+.active-tabs::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% + 2px);
+  height: 5px;
+  background:#481e94;
 }
 
-.setttings_container_details{
-  background-color: white;
-  height: 100%;
-  width: 70%;
-  border-radius: 20px;
+.bloc-tabs button{
+border: none;
+}
+
+.content-tabs {
+  flex-grow : 1;
+}
+.content-set {
   padding: 20px;
+  width: 100%;
+  height: 100%;
+  display: none;
+
 }
 
-.Animals_photo_container .circle {
-  width: 20%;
-  height: 20%;
-  background-color: #7268b9;
+.content-set h2 {
+  padding: 0px 0 5px 0px;
+}
+.content-set hr {
+  width: 100px;
+  height: 2px;
+  background: #222;
+  margin-bottom: 5px;
+}
+.content-set p {
+  width: 100%;
+  height: 100%;
+}
+
+.active-content {
+  display: flex;
+}
+
+.sett_img-user img{
+  overflow: hidden;
+  max-width: 250px;
+  min-width: 250px;
+  min-height: 200px;
+  max-height: 250px;
   border-radius: 50%;
-  z-index: 1;
 }
 
+.sett_img-user {
+  margin-left: 200px;
+}
 /*search-bar*/
 
 /*Add new animal*/
@@ -1907,7 +1945,8 @@ select option:checked {
 }
 
 .textarea_comment {
-  min-width: 700px;
+  min-width:750px;
+  margin-left: 20px;
 }
 
 .btn-primary {
@@ -1968,4 +2007,89 @@ margin-left: 660px;
   width: 50px;
   height: 50px;
   border-radius: 50%;
+}
+
+
+
+/*Setting user*/
+.user-settings-container {
+  width: 100%;
+  display: flex;
+  
+  align-items: center;
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+.settings_user {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 20px;
+}
+
+.sett_img-user {
+  margin-right: 20px;
+}
+
+.sett_user_info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.sett_user_name h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.sett_user_email h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.sett_user_bio h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.user-settings-container input[type="text"] {
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 18px;
+}
+
+.user-settings-container button {
+  margin-right: 10px;
+  width: 150px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  color: #fff;
+  background-color: #333;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.user-settings-container button:hover {
+  background-color: #555;
+}
+
+.user_edit_buttons {
+  width: 100%;
+  min-width: 200x;
+  float: right;
+  right: 20px;
+  display: flex;
+  flex-direction: row;
+  margin-top: 100px;
+}
+
+.user_edit_buttons button:last-child {
+  margin-right: 0;
 }

@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../index.css';
+import Button from '@mui/material/Button';
 import '../index.scss';
 import ListComments from './ListComments.js';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const userId = localStorage.getItem('userId');
 
@@ -10,9 +14,9 @@ function PostsList() {
   const [posts, setPosts] = useState([]);
   const [currentSection, setCurrentSection] = useState('section-1');
   const [selectedPostId, setSelectedPostId] = useState(null); 
+  const [post, setPost] = useState(null);
   const [selectedPosts, setSelectedPosts] = useState(new Map());
-  console.log(selectedPostId)
-  
+  const picture = selectedPosts ? `http://localhost:7070/${selectedPosts.imagePaths}` : '';
   
   const toggleSection = (postId) => {
     const newSelectedPosts = new Map(selectedPosts); 
@@ -44,7 +48,7 @@ function PostsList() {
             {post.userid ? (
               <div className='post_content'>
                 <div className='photo_a'>
-                  <img src={post.picture}></img>
+                  <img src={`http://localhost:7070/${post.imagePaths}`}></img>
                   
                 </div>
                 <div className='post_content_details_'>
@@ -141,7 +145,8 @@ function User({ userid, postID }) {
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [savedPostId, setSavedPostId] = useState(null);
-  
+  const picture = user ? `http://localhost:7070/${user.imagePaths}` : '';
+
   useEffect(() => {
     axios
       .get(`http://localhost:7070/api/users/${userid}`)
@@ -177,7 +182,7 @@ function User({ userid, postID }) {
     axios
       .delete(`http://localhost:7070/api/posts/${postID}`)
       .then((res) => {
-        setIsSaved(true)
+       
         console.log("Post deleted successfully", res);
       })
       .catch((err) => {
@@ -186,7 +191,7 @@ function User({ userid, postID }) {
   };
 
   const handleEdit = (event) => {
-    event.preventDefault();
+
     window.location.href = `/editPost/${postID}`;
     setShowContextMenu(false); 
   };
@@ -217,7 +222,7 @@ function User({ userid, postID }) {
   return (
     <div>
       <div className="user-info_b">
-        <img src={user.picture} alt="Profile Picture" />
+        <img src={picture} alt="Profile Picture" />
         <p className="user-name">{user.name}</p>
         <div className='fav_iconIhe'>
         <label className="like">
@@ -236,12 +241,13 @@ function User({ userid, postID }) {
          </div>
          {showContextMenu && (
            <div className="context-menu-options">
-             <div className='context-menu-opt' onClick={handleDelete}>
-             <img src="https://img.icons8.com/material-outlined/24/null/filled-trash.png"/>
-             </div>
-             <div  className='context-menu-opt' onClick={handleEdit}>
-             <img src="https://img.icons8.com/ios/50/null/edit--v1.png"/>
-             </div>
+           
+             <IconButton aria-label="delete" color="secondary" onClick={() => handleDelete(post._id)}>
+              <DeleteIcon className="DeleteIcon" fontSize="small"  style={{ position: 'relative', top: '50px' }} />
+            </IconButton>
+            <IconButton aria-label="edit" color="primary" onClick={() => handleEdit(post._id)}  style={{ position: 'relative' }}>
+              <EditIcon fontSize="small"  />
+            </IconButton>
            </div>
          )}
        </div>

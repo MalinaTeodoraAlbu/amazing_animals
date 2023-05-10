@@ -9,7 +9,6 @@ function AddNewPost() {
   const userId = localStorage.getItem("userId");
   const [animals, setAnimals] = useState([]);
   const [animalId, setAnimalId] = useState(null);
-  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
   const [tag, setTag] = useState("");
@@ -42,7 +41,7 @@ function AddNewPost() {
           setSex(animalData.sex);
           setColor(animalData.color);
           setWeight(animalData.weight);
-          setPictureSrc(animalData.picture);
+          setPictureSrc(animalData.imagePaths);
           setBirthday(animalData.birthday);
           setSterilizer(animalData.sterilizer);
           setLocation(animalData.location);
@@ -61,245 +60,111 @@ function AddNewPost() {
 
   const handlePictureChange = (event) => {
     const file = event.target.files[0];
+    const reader = new FileReader();
+    setPictureSrc(event.target.files[0])
+    
+    reader.onloadend = () => {
+      setPicture(reader.result);
+      
+    };
     if (file) {
-      const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setPictureSrc(reader.result);
-        setPicture(file);
-      }
+      console.log(file)
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!picture) {
-      toast.error('Please select an image', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-        style: {
-          marginTop: '5rem',
-        },
+  
+const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData();
+  formData.append('imagePaths', pictureSrc);
+  formData.append('userid', userId);
+  formData.append('content', content);
+  formData.append('location', location);
+  formData.append('category', category);
+  formData.append('tag', tag);
+  formData.append('name', name);
+  formData.append('species', species);
+  formData.append('color', color);
+  formData.append('sex', sex);
+  formData.append('weight', weight);
+  formData.append('birthday', birthday);
+  formData.append('sterilizer', sterilizer);
+  try {
+    if (category === 'Lovely') {
+      const res = await axios.post(`http://localhost:7070/api/posts`, formData, {
+        
       });
-      return;
-    }
-    if (!['image/jpeg', 'image/png'].includes(picture.type)) {
-      toast.error('Unsupported file type', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-        style: {
-          marginTop: '5rem',
-        },
-      });
-      return;
-    }
-    const reader = new FileReader();
-    reader.readAsDataURL(picture);
-    reader.onloadend = async () => {
-      const post = {
-        userid : userId,
-        content,
-        location,
-        category,
-        tag,
-        picture: reader.result,
-        name,
-        species,
-        color,
-        sex,
-        location,
-        weight,
-        picture: reader.result,
-        birthday,
-        sterilizer
+
+      if(res.status === 200){
+        window.location.href = `/feed`;
       }
-      if(location === ''){
-        toast.error("Empty  location", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        return;
-      }
-      if(content === ''){
-        toast.error("Empty  description", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        return;
-      }
-      if(category === ''){
-        toast.error("Empty  category", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        return;
-      }
-      if(tag === ''){
-        toast.error("Empty  tag", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        return;
-      }
-    if(category === 'Lovely') {
-      const res = await fetch(`http://localhost:7070/api/posts`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(post),
-      });
       
-      if(res.status === 200){ 
-        toast.success("Succesfully!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        window.location.href = '/feed' ;
-      }else {
-        toast.error("Internal server error", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-    }
-    }
-    else  {
-      const animal = {
+    } else {
+      const animalData = {
         name,
         species,
         color,
         sex,
         location,
         weight,
-        picture: reader.result,
+        picture: picture,
         birthday,
         sterilizer
       };
-      if(name === ''){
-        toast.error("Empty  name", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        return;
-      }
-      if(species === ''){
-        toast.error("Empty species", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        return;
-      }
-      if(sex === '-'){
-        toast.error("Empty sex", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        return;
-      }
-      if(weight === ''){
-        toast.error("Empty weight", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        return;
-      }
-      if(saveAnimal===true){
-        const res = await fetch(`http://localhost:7070/api/animals/${userId}`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(animal),
-      });
-      
-      const res_post = await fetch(`http://localhost:7070/api/posts`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(post),
-      });
-      
-      if(res.status === 200 && res_post.status === 200){ 
-        toast.success("Succesfully!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        window.location.href = '/feed' ;
-      }else {
-        toast.error("Internal server error", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });}
-      
-      }
-      
-      const res = await fetch(`http://localhost:7070/api/posts`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(post),
-      });
-      
-      if(res.status === 200){ 
-        toast.success("Succesfully!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        window.location.href = '/feed' ;
-      }else {
-        toast.error("Internal server error", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-    }
-    }
-  }
-  };
 
+      if (saveAnimal === true) {
+        const animalRes = await axios.post(`http://localhost:7070/api/animals/${userId}`, animalData);
+
+        if (animalRes.status !== 200) {
+          toast.error('Internal server error', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+            style: {
+              marginTop: '5rem'
+            }
+          });
+          return;
+        }
+      }
+
+      const postRes = await axios.post(`http://localhost:7070/api/posts`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      if (postRes.status === 200) {
+        toast.success('Succesfully!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1000,
+          style: {
+            marginTop: '5rem'
+          }
+        });
+        window.location.href = '/feed';
+      } else {
+        toast.error('Internal server error', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+          style: {
+            marginTop: '5rem'
+          }
+        });
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error('Internal server error', {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000,
+      style: {
+        marginTop: '5rem'
+      }
+    });
+  }
+};
 
   
     return (
@@ -310,7 +175,7 @@ function AddNewPost() {
        <div className="add-new-post-picture-side">
        <label htmlFor="picture">Picture:</label>
           <div className="rect-image-add">
-            <img src={pictureSrc} alt="animal picture" />
+            <img src={picture} alt="animal picture" />
           </div>
           <input type="file" id="picture" name="picture" onChange={handlePictureChange} />
     </div>

@@ -1,18 +1,20 @@
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
-import { default as mainRouter } from "./routers/mainRouter.js";
-
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const {mainRouter} = require("./routers/mainRouter");
+const userRouter = require("./routers/userRouter");
+const postRouter = require("./routers/postRouter");
 
 const app = express()
 
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
+app.use(bodyParser.json({ limit: '100000mb' }));
+app.use(bodyParser.urlencoded({ limit: '100000mb', extended: true }));
 app.use(cors());
 
-
 app.use("/api", mainRouter);
+app.use("/api", userRouter);
+app.use("/api", postRouter);
 app.use('/uploads', express.static('uploads'));
 
 app.listen(7070, async () => {

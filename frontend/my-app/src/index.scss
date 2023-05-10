@@ -9,41 +9,22 @@
   
   .context-menu-options {
     position: absolute;
-    top: 50%;
-    right: 100px;
-    transform: translateY(-50%);
-    color: black;
-    padding: 8px;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 9999;
-  }
-  
-  .context-menu-options div {
-
-    margin-bottom: 8px;
-    width: 50px;
-    height: 50px;
-    background-color: white;
-    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    
+    right: 0;
+    z-index: 1;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    padding: 8px;
   }
   
-  .context-menu-options img {
-    width: 20px;
+  .context-menu-options button:hover {
+    background-color: transparent;
   }
-  
-  .context-menu-opt {
-    margin-bottom: 1%;
-  }
-  
-  .context-menu:hover .context-menu-options {
-    display: block;
-  }
-  
-  
 
   :root {
     --size: 60px;

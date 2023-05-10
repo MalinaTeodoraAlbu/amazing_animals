@@ -17,6 +17,7 @@ function MyProfile() {
   const [posts, setPosts] = useState([]);
   const userId = localStorage.getItem('userId');
   const [postID, setPostID] = useState(null);
+  const picture = user ? `http://localhost:7070/${user.imagePaths}` : '';
 
   useEffect(() => {
     axios.get(`http://localhost:7070/api/users/${userId}`)
@@ -57,7 +58,7 @@ function MyProfile() {
           </div>
           <div className='circle2'>
           {user &&
-             <img src={user.picture} alt="Profile Picture"/>
+             <img src={picture} alt="Profile Picture"/>
           }
           </div>
           <div className="User_spef">

@@ -10,6 +10,7 @@ function Header() {
   const location = useLocation();
   const userId = localStorage.getItem('userId');
   console.log(userId)
+  const picture = user ? `http://localhost:7070/${user.imagePaths}` : '';
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -32,7 +33,7 @@ function Header() {
       {location.pathname !== '/' && user && (
         <div className="user_info">
           <span>{user.name}</span>
-          <img src={user.picture} alt="Profile Picture" />
+          <img src={picture} alt="Profile Picture" />
           <button onClick={handleLogout} >Logout</button>
         </div>
       )}

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const animalSchema = new mongoose.Schema({
 
@@ -31,9 +31,8 @@ const animalSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  picture: {
-    type: String,
-    required: true
+  imagePaths: {
+    type: String
   },
   sterilizer: {
     type: Boolean,
@@ -43,4 +42,5 @@ const animalSchema = new mongoose.Schema({
 
 const Animal = mongoose.model('Animal', animalSchema);
 
-export default Animal;
+
+module.exports = Animal;
