@@ -3,40 +3,32 @@ const mongoose = require('mongoose');
 const animalSchema = new mongoose.Schema({
 
   name: {
-    type: String,
-    required: true
+    type: String
   },
   species: {
-    type: String,
-    required: true
+    type: String
   },
   sex: {
-    type: String,
-    required: true
+    type: String
   },
   color: {
-    type: String,
-    required: true
+    type: String
   },
   birthday: {
-    type: Date,
-    required: true
+    type: Date
   },
   weight: {
-    type: Number,
-    required: true
+    type: Number
   },
   userid: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: 'User'
   },
   imagePaths: {
     type: String
   },
   sterilizer: {
-    type: Boolean,
-    default: false
+    type: Boolean
   }
 });
 

@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import axios from 'axios';
 
+const userId = localStorage.getItem('userId');
 
 function AddNewAnimal() {
-  const userId = localStorage.getItem('userId');
+
   const [pictureSrc, setPictureSrc] = useState('');
   const [name,setName] = useState('');
   const [species,setSpecies] = useState('');
@@ -19,125 +21,54 @@ function AddNewAnimal() {
 
   const handlePictureChange = (event) => {
     const file = event.target.files[0];
+    const reader = new FileReader();
+    setPictureSrc(event.target.files[0])
+    
+    reader.onloadend = () => {
+      setPicture(reader.result);
+      
+    };
     if (file) {
-      const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setPictureSrc(reader.result);
-        setPicture(file);
-      }
+      console.log(file)
     }
   };
 
 
-    const handleSave = async (event) => {
-        event.preventDefault();
-        if (!picture) {
-          toast.error('Please select an image', {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: '5rem',
-            },
-          });
-          return;
-        }
-        if (!['image/jpeg', 'image/png'].includes(picture.type)) {
-          toast.error('Unsupported file type', {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: '5rem',
-            },
-          });
-          return;
-        }
-        const reader = new FileReader();
-        reader.readAsDataURL(picture);
-        reader.onloadend = async () => {
-          const animal = {
-            name,
-            species,
-            color,
-            sex,
-            weight,
-            picture: reader.result,
-            birthday,
-            sterilizer
-          };
+  const handleSave = async (event) => {
+    event.preventDefault();
 
-        if(name === ''){
-            toast.error("Empty  name", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-            return;
-          }
-          if(species === ''){
-            toast.error("Empty species", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-            return;
-          }
-          if(sex === '-'){
-            toast.error("Empty sex", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-            return;
-          }
-          if(weight === ''){
-            toast.error("Empty weight", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-            return;
-          }
-          const res = await fetch(`http://localhost:7070/api/animals/${userId}`, {
-            method: "post",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(animal),
-          });
-          
-          if(res.status === 200){ 
-            toast.success("Succesfully!", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 1000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-            window.location.href = '/myAnimals' ;
-          }else {
-            toast.error("Internal server error", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-          }}}
+    const formData = new FormData();
+    formData.append('userid', userId);
+    formData.append('name', name);
+    formData.append('species', species);
+    formData.append('sex', sex);
+    formData.append('color', color);
+    formData.append('weight', weight);
+    formData.append('birthday', birthday);
+    formData.append('sterilizer', sterilizer);
+    formData.append('imagePaths', pictureSrc);
+
+    try {
+      const animalRes = await axios.post(`http://localhost:7070/api/animal`, formData);
+      console.log(animalRes);
+
+      if (animalRes.status === 200) {
+        window.location.href = '/myAnimals';
+      }
+    } catch (error) {
+      console.error(error);
+      
+    }
+  };
+
 
           const handleCancel = async (event) => {
             event.preventDefault();
             window.location.href = '/myAnimals' ;
           }
 
+          
   return (
     <div className="add-new-animal">
         <ToastContainer />
@@ -168,7 +99,7 @@ function AddNewAnimal() {
         <div className="container_add_new_animal_b">
           <label htmlFor="picture">Picture:</label>
           <div className="circle-image">
-            <img src={pictureSrc} alt="animal picture" />
+            <img src={picture} alt="animal picture" />
           </div>
           <input type="file" id="picture" name="picture" onChange={handlePictureChange} />
           <label htmlFor="birthday">Birthday:</label>

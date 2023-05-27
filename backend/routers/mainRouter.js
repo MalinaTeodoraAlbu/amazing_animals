@@ -36,48 +36,8 @@ const animalCollection = dbo.collection('Animal');
 const medicalRecordCollection = dbo.collection('Medical Record');
 const savedPostsCollection = dbo.collection('Saved Posts');
 const FriendsCollection = dbo.collection('Friends');
-
-// Get an animal by id
-mainRouter.get('/animals/:animalID', async (req, res) => {
-  try {
-    const animalID = new ObjectId(req.params.animalID);
-    const animal = await animalCollection.findOne({ _id: animalID });
-    if (animal) {
-      res.status(200).send(animal);
-    } else {
-      res.status(404).send('User not found');
-    }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-
-
-
-
-
-
-mainRouter.put('/animals/:id', async (req, res) => {
-  try {
-    const id = new ObjectId(req.params.id);
-      const body = req.body;
-      const updateAnimal = await animalCollection.findOneAndUpdate(
-        { _id: id },
-        { $set: body },
-        { returnDocument : "after" },
-        { returnOriginal: false }
-      );
-      if (!updateAnimal.value) {
-        return res.status(404).send('Animal not found');
-      }
-      res.status(200).send(updateAnimal.value);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-
+const ConversationCollection = dbo.collection('Conversations');
+const MessagesCollection = dbo.collection('Messages');
 
 
 mainRouter.put('/comments/:id', async (req, res) => {
@@ -102,17 +62,6 @@ mainRouter.put('/comments/:id', async (req, res) => {
 
 
 
-
-//delete animal
-mainRouter.delete('/animals/:id', async (req, res) => {
-  try {
-    const id = new ObjectId(req.params.id);
-    const deleteAnimal = await animalCollection.deleteOne({ _id: id});
-    res.status(200).send(deleteAnimal);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
 
 
 //delete savedPost
@@ -217,20 +166,6 @@ mainRouter.get('/comments/:postid/post', async (req, res) => {
   }
 });
 
-//get all animals 
-mainRouter.get('/users/:userId/animals', async (req, res) => {
-  try {
-    const userId = new ObjectId(req.params.userId);
-    
-    const animals = await animalCollection.find({userid :userId}).toArray();
-
-    res.status(200).json(animals);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
-});
-
 
 //get all saved posts 
 mainRouter.get('/users/:userId/savedPosts', async (req, res) => {
@@ -246,26 +181,6 @@ mainRouter.get('/users/:userId/savedPosts', async (req, res) => {
   }
 });
 
-
-// add new animal
-mainRouter.post('/animals/:userid', async (req, res) => {
-  try {
-    const userId = new ObjectId(req.params.userid);
-    const user = await userCollection.findOne({ _id: userId });
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-     const newAnimal = {
-      ...req.body,
-      userid: userId
-    };
-    const result = await animalCollection.insertOne(newAnimal);
-    res.status(200).send(result);
-  } catch (err) {
-    res.status(500).send(err);
-    console.log(err);
-  }
-});
 
 
 
@@ -296,20 +211,7 @@ mainRouter.get('/animals/:animalid/medicalR', async (req, res) => {
 
 
 
-// Get an animal by id
-mainRouter.get('/animals/:animalid', async (req, res) => {
-  try {
-    const animalid = new ObjectId(req.params.animalid);
-    const animal = await animalCollection.findOne({ _id: animalid });
-    if (animal) {
-      res.status(200).send(animal);
-    } else {
-      res.status(404).send('Animal not found');
-    }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+
 
 
 
@@ -355,4 +257,4 @@ mainRouter.get('/users/email/:emailUser', async (req, res, next) => {
 
 module.exports = {mainRouter, userCollection, savedPostsCollection, 
   postCollection, commentCollection, FriendsCollection,
-   medicalRecordCollection, animalCollection};
+   medicalRecordCollection, animalCollection, ConversationCollection, MessagesCollection};

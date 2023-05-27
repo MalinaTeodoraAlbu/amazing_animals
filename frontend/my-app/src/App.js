@@ -15,6 +15,7 @@ import EditAnimal from "./EditPages/EditAnimal"
 import EditPost from "./EditPages/EditPost"
 import AddNewPost from "./AddPage/AddNewPost"
 import ViewPost from "./ViewPost";
+import Messanger from "./messanger/messanger";
 
 function App() {
   const location = useLocation();
@@ -27,6 +28,7 @@ function App() {
     <div className="content">
       {}
       {!isLoginPage && <Navbar />}
+
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/feed" element={<Feed />} />
@@ -40,7 +42,7 @@ function App() {
         <Route path="/editAnimal/:animalId" element={<EditAnimal />} />
         <Route path="/editPost/:postID" element={<EditPost />} />
         <Route path="/viewPost/:postID" element={<ViewPost />} />
-
+        <Route path="/messanger" element={<Messanger />} />
       </Routes>
     </div>
   </div>

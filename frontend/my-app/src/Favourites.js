@@ -68,7 +68,7 @@ function ListOfFav(props) {
     }
   };
   
-  const handleView = (event) => {
+  const handleView = (event, postID) => {
     event.preventDefault();
     window.location.href = `/viewPost/${postID}`;
   };
@@ -86,7 +86,7 @@ function ListOfFav(props) {
       </label>
         </div>
         <div className='fav_iconIhe'>
-        <IconButton aria-label="edit" color="primary" onClick={handleView} >
+        <IconButton aria-label="edit" color="primary" onClick={(event) => handleView(event, post._id)} >
               <NavigateNextIcon fontSize="large" variant="text" />
             </IconButton>
         </div>

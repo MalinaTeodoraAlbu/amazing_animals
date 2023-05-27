@@ -18,12 +18,13 @@ function ViewPost() {
     const newSelectedPosts = new Map(selectedPosts); 
     newSelectedPosts.set(postId, !selectedPosts.get(postId)); 
     setSelectedPosts(newSelectedPosts); 
+    
   };
-  
+  console.log('id',postID)
 
   useEffect(() => {
     axios
-      .get(`http://localhost:7070/api/posts/644d19969621a426082f2d07`)
+      .get(`http://localhost:7070/api/posts/${postID}`)
       .then((res) => setPost(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -45,7 +46,7 @@ function ViewPost() {
             {post.userid ? (
               <div className='post_content'>
                 <div className='photo_a'>
-                  <img src={post.picture}></img>
+                  <img src={`http://localhost:7070/${post.imagePaths}`}></img>
                   
                 </div>
                 <div className='post_content_details_'>
