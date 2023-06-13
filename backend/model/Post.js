@@ -27,6 +27,10 @@ const postSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  likes: {
+    type: Array,
+    default: [],
+  },
   imagePaths: { type: String },
   name: {
     type: String,
@@ -51,7 +55,7 @@ const postSchema = new mongoose.Schema({
     default: false
   }
 
-});
+}, { timestamps: true });
 
 
 const Post = mongoose.model('Post', postSchema);

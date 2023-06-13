@@ -1,6 +1,6 @@
 import React from 'react';
 import pic from '../media/e7f4f592f2f2f1d212ca1e225ef46360.jpg'
-
+import { jsPDF } from "jspdf";
 
 function AnimalProfile(props) {
   const { selectedAnimal } = props;
@@ -9,6 +9,7 @@ function AnimalProfile(props) {
     event.preventDefault();
     window.location.href = `/editAnimal/${selectedAnimal._id}`;
   };
+  
   
 
   return (
@@ -23,6 +24,7 @@ function AnimalProfile(props) {
             <div className="Animals_details_container_border">
               <h3>Specifications</h3>
               <button className="add_new_animal edit" onClick={handleEdit} >Edit</button>
+              
             </div>
             <div className="Animals_details_container">
               <p>Name: {selectedAnimal.name}</p>

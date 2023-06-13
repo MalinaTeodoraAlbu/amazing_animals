@@ -102,3 +102,18 @@
   
   }
   
+
+  .notification {
+    background-color: #f0f0f0;
+    width: 450px;
+    height: 70px;
+    padding: 10px;
+    float: right;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    position: relative; /* or absolute, fixed, sticky */
+    z-index: 999; /* any number bigger than z-index of other elements */
+    margin-right: 10px;
+}
+
+  

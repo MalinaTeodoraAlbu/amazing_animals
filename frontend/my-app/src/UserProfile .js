@@ -9,31 +9,35 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { useState, useEffect } from 'react';
 import './index.css';
+import { useParams } from 'react-router-dom';
 
-function MyProfile() {
+function UserProfile() {
   const [user, setUser] = useState(null);
   const [currentAnimalIndex, setCurrentAnimalIndex] = useState(0);
   const [animals, setAnimals] = useState([]);
   const [posts, setPosts] = useState([]);
-  const userId = localStorage.getItem('userId');
+  const {userID} = useParams();
   const [postID, setPostID] = useState(null);
   const picture = user ? `http://localhost:7070/${user.imagePaths}` : '';
-
+  
 
   useEffect(() => {
-    axios.get(`http://localhost:7070/api/users/${userId}`)
-      .then(res => setUser(res.data))
-      .catch(err => console.error(err));
-
-    axios.get(`http://localhost:7070/api/users/${userId}/animals`)
-      .then(res => setAnimals(res.data))
-      .catch(err => console.error(err));
-
-    axios.get(`http://localhost:7070/api/users/${userId}/posts`)
-      .then(res => setPosts(res.data))
-      .catch(err => console.error(err));
-  }, []);
-
+    axios
+      .get(`http://localhost:7070/api/users/${userID}`)
+      .then((res) => setUser(res.data))
+      .catch((err) => console.error(err));
+  
+    axios
+      .get(`http://localhost:7070/api/users/${userID}/animals`)
+      .then((res) => setAnimals(res.data))
+      .catch((err) => console.error(err));
+  
+    axios
+      .get(`http://localhost:7070/api/users/${userID}/posts`)
+      .then((res) => setPosts(res.data))
+      .catch((err) => console.error(err));
+  }, [userID]);
+  
   const handleNext = () => {
     setCurrentAnimalIndex((currentAnimalIndex + 1) % animals.length);
   };
@@ -113,18 +117,19 @@ function MyProfile() {
         <div className="posts_container">
   {posts.map(post => (
     <div className="post_container" key={post._id} >
-      <img src={`http://localhost:7070/${post.imagePaths}`} alt={post.title} />
+       
+      <img src={ post ? `http://localhost:7070/${post.imagePaths}` : ''} alt={post.title} />
       <button onClick={() => { window.location.href = `/viewPost/${post._id}` }}>View post</button>
     </div>
   ))}
 </div>
 </div> 
     </div>  
-    <div className="bottom_space"></div>
+
     </div>  
   );
 }
 
 
 
-export default MyProfile;
+export default UserProfile;

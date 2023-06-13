@@ -24,6 +24,7 @@ function PostsList() {
     setSelectedPosts(newSelectedPosts); 
   };
   
+  
 
   useEffect(() => {
     axios
@@ -219,10 +220,15 @@ function User({ userid, postID }) {
   };
 
   
+  const handleLooKProfile = () => {
+    window.location.href = `/user/${user._id}`;
+    setShowContextMenu(false); 
+  } 
+
   return (
     <div>
       <div className="user-info_b">
-        <img src={picture} alt="Profile Picture" />
+        <img src={picture} alt="Profile Picture" onClick={handleLooKProfile}/>
         <p className="user-name">{user.name}</p>
         <div className='fav_iconIhe'>
         <label className="like">

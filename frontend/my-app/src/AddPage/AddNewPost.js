@@ -72,13 +72,11 @@ function AddNewPost() {
       console.log(file)
     }
   };
-
   
 const handleSubmit = async (event) => {
   event.preventDefault();
 
   const formData = new FormData();
-  formData.append('imagePaths', pictureSrc);
   formData.append('userid', userId);
   formData.append('content', content);
   formData.append('location', location);
@@ -86,6 +84,7 @@ const handleSubmit = async (event) => {
   formData.append('tag', tag);
   formData.append('name', name);
   formData.append('species', species);
+  formData.append('imagePaths', pictureSrc);
   formData.append('color', color);
   formData.append('sex', sex);
   formData.append('weight', weight);

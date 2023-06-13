@@ -34,29 +34,30 @@ function ListComments(props) {
   }, [userID_LOCAL]);
 
 
-const handleCommentDelete = async (commentId) => {
-  try {
-    await axios.delete(`http://localhost:7070/api/comments/${commentId}`);
-    setComments((prevComments) => prevComments.filter((comment) => comment._id !== commentId));
-    toast.success('Successfully deleted comment!', {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 1000,
-      style: {
-        marginTop: '5rem',
-      },
-    });
-  } catch (err) {
-    console.error(err);
-    toast.error('Failed to delete comment', {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 3000,
-      style: {
-        marginTop: '5rem',
-      },
-    });
-  }
-   setComments((prevComments) => prevComments.filter(comment => comment._id !== commentId));
-};
+  const handleCommentDelete = async (commentId) => {
+    try {
+      const res = await axios.delete(`http://localhost:7070/api/comments/${commentId}`);
+      if (res.status === 200) {
+        setComments((prevComments) => prevComments.filter((comment) => comment._id !== commentId));
+        toast.success('Successfully deleted comment!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1000,
+          style: {
+            marginTop: '5rem',
+          },
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to delete comment', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+        style: {
+          marginTop: '5rem',
+        },
+      });
+    }
+  };
 
 const handleCommentUpdate = async (commentId, updatedText) => {
   try {
@@ -201,7 +202,7 @@ const handleCommentUpdate = async (commentId, updatedText) => {
 
 function User({ userid }) {
   const [user, setUser] = useState(null);
-
+  const picture = user ? `http://localhost:7070/${user.imagePaths}` : '';
   useEffect(() => {
     axios
       .get(`http://localhost:7070/api/users/${userid}`)
@@ -213,9 +214,14 @@ function User({ userid }) {
     return <p>Loading...</p>;
   }
 
+  const handleLooKProfile = () => {
+    window.location.href = `/user/${user._id}`;
+  } 
+
+
   return (
     <div className="user-info_comment">
-      <img src={user.picture} alt="Profile Picture" className="profile-picture_user-img_comment" />
+      <img src={picture} alt="Profile Picture" className="profile-picture_user-img_comment" onClick={handleLooKProfile}/>
       <p className="user-name">{user.name}</p>
     </div>
   );

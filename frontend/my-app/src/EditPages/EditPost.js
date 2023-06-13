@@ -11,7 +11,6 @@ function EditPost() {
     const [animals, setAnimals] = useState([]);
     const [animalId, setAnimalId] = useState(null);
     const { postID } = useParams();
-    const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("");
     const [tag, setTag] = useState("");
@@ -62,7 +61,6 @@ function EditPost() {
             fetch(`http://localhost:7070/api/posts/${postID}`)
             .then(response => response.json())
             .then(data => {
-              setTitle(data.title)
               setContent(data.content)
               setCategory(data.category)
               setTag(data.tag)
@@ -120,69 +118,55 @@ function EditPost() {
       formData.append('weight', weight);
       formData.append('birthday', birthday);
       formData.append('sterilizer', sterilizer);
+    
       if (category === 'Lovely') {
         const res = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
-        
-        if(res.status === 200){
+    
+        if (res.status === 200) {
           window.location.href = `/feed`;
         }
-        
-      }
-      else  {
-        const animal = {
-          name,
-          species,
-          color,
-          sex,
-          weight,
-          picture,
-          birthday,
-          sterilizer
-        };
-       
-        if(saveAnimal===true){
-          const res = await fetch(`http://localhost:7070/api/animals/${userId}`, {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(animal),
-        });
-        
-        const res_post = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
-        
-        if(res_post.status === 200){
-          window.location.href = `/feed`;
+      } else {
+        const animalData = new FormData();
+        animalData.append('userid', userId);
+        animalData.append('name', name);
+        animalData.append('species', species);
+        animalData.append('sex', sex);
+        animalData.append('color', color);
+        animalData.append('weight', weight);
+        animalData.append('birthday', birthday);
+        animalData.append('sterilizer', sterilizer);
+        animalData.append('imagePaths', pictureSrc);
+    
+        if (saveAnimal === true) {
+          const animalRes = await axios.post(`http://localhost:7070/api/animal`, animalData);
+          console.log(animalRes);
         }
-        
-        }
-        
-        const res_post = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
-        
-        
-        if(res_post.status === 200){ 
-          toast.success("Succesfully!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 1000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-          window.location.href = '/feed' ;
-        }else {
-          toast.error("Internal server error", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: "5rem"
-            }
-          });
-      }
       }
     
-    };
-  
-  
+      const res_post = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
+    
+      if (res_post.status === 200) {
+        toast.success("Successfully!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1000,
+          style: {
+            marginTop: "5rem"
+          }
+        });
+        window.location.href = '/feed';
+      } else {
+        toast.error("Internal server error", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+          style: {
+            marginTop: "5rem"
+          }
+        });
+      }
+    }
+    
+    
+
     
       return (
      
@@ -350,6 +334,6 @@ function EditPost() {
       </div>
   
     );
-}
+          }
   
 export default EditPost;

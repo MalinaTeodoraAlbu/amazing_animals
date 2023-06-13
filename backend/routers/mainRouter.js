@@ -255,6 +255,93 @@ mainRouter.get('/users/email/:emailUser', async (req, res, next) => {
 });
 
 
+//get friends
+mainRouter.get("/friends/:userId", async (req, res) => {
+  try {
+    const user = await userCollection.findById(req.params.userId);
+    const friends = await Promise.all(
+      user.followings.map((friendId) => {
+        return userCollection.findOne({ _id: friendId });
+      })
+    );
+    let friendList = [];
+    friends.map((friend) => {
+      const { _id, name, imagePaths } = friend;
+      friendList.push({ _id, name, imagePaths });
+    });
+    res.status(200).json(friendList)
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//follow a user
+mainRouter.put("/:id/follow", async (req, res) => {
+  if (req.body._id !== req.params.id) {
+    try {
+      const idUser = new ObjectId(req.params.id);
+      const idUserCurent = new ObjectId(req.body._id);
+      const user = await userCollection.findOne({ _id: idUser });
+      const currentUser = await userCollection.findOne({ _id: idUserCurent});
+      console.log(currentUser
+        )
+      console.log("req.body._id", idUserCurent);
+      console.log("user", user);
+      console.log("user.followers", user?.followers);
+
+      if (user && user.followers && !user.followers.includes(idUserCurent)) {
+        await userCollection.updateOne(
+          { _id: idUserCurent },
+          { $push: { followings: idUser } }
+        );
+        await userCollection.updateOne(
+          { _id: idUser },
+          { $push: { followers: idUserCurent } }
+        );
+        
+        res.status(200).json("User has been followed.");
+      } else {
+        res.status(403).json("You already follow this user.");
+      }
+    } catch (err) {
+      res.status(500).json(err);
+      console.log(err);
+    }
+  } else {
+    res.status(403).json("You can't follow yourself.");
+  }
+});
+
+
+
+// unfollow a user
+mainRouter.put("/:id/unfollow", async (req, res) => {
+  if (req.body._id !== req.params.id) {
+    try {
+      const idUser = new ObjectId(req.params.id);
+      const user = await userCollection.findOne({ _id: idUser });
+      const currentUser = await userCollection.findOne({ _id: req.body._id });
+      if (user.followers.includes(req.body._id)) {
+        await userCollection.updateOne(
+          { _id: idUser },
+          { $pull: { followers: req.body._id } }
+        );
+        await userCollection.updateOne(
+          { _id: req.body._id },
+          { $pull: { followings: idUser } }
+        );
+        res.status(200).json("User has been unfollowed.");
+      } else {
+        res.status(403).json("You don't follow this user.");
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  } else {
+    res.status(403).json("You can't unfollow yourself.");
+  }
+});
+
 module.exports = {mainRouter, userCollection, savedPostsCollection, 
   postCollection, commentCollection, FriendsCollection,
    medicalRecordCollection, animalCollection, ConversationCollection, MessagesCollection};

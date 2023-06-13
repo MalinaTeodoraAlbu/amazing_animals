@@ -6,7 +6,7 @@ import MyAnimals  from'./MyAnimals'
 import MyProfile  from'./MyProfile'
 import Settings  from'./Settings'
 import Header from "./Header";
-
+import UserProfile from "./UserProfile "
 import './index.css';
 import Login from "./Login";
 import AddNewAnimal from "./AddPage/AddNewAnimal"
@@ -16,6 +16,7 @@ import EditPost from "./EditPages/EditPost"
 import AddNewPost from "./AddPage/AddNewPost"
 import ViewPost from "./ViewPost";
 import Messanger from "./messanger/messanger";
+import NotificationsContainer from "./NotificationsContainer";
 
 function App() {
   const location = useLocation();
@@ -28,13 +29,14 @@ function App() {
     <div className="content">
       {}
       {!isLoginPage && <Navbar />}
-
+      <NotificationsContainer />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/favourites" element={<Favourites />} />
         <Route path="/myAnimals" element={<MyAnimals />} />
         <Route path="/myProfile" element={<MyProfile />} />
+        <Route path="/user/:userID" element={<UserProfile  />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/AddNewPost" element={<AddNewPost />} />
         <Route path="/addNewAnimal" element={<AddNewAnimal />} />

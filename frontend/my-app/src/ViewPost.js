@@ -29,6 +29,7 @@ function ViewPost() {
       .catch((err) => console.error(err));
   }, []);
 
+  
   return (
     <div className='post_view_container'>
         <div className='post_view'>
@@ -149,6 +150,8 @@ function User({ userid, postID }) {
   const [savedPostId, setSavedPostId] = useState(null);
   const picture = user ? `http://localhost:7070/${user.imagePaths}` : '';
 
+ 
+
   useEffect(() => {
     axios
       .get(`http://localhost:7070/api/users/${userid}`)
@@ -220,11 +223,14 @@ function User({ userid, postID }) {
     }
   };
 
+  const handleLooKProfile = () => {
+    window.location.href = `/user/${user._id}`;
+  } 
   
   return (
     <div>
       <div className="user-info_b">
-        <img src={picture} alt="Profile Picture" />
+        <img src={picture} alt="Profile Picture" onClick={handleLooKProfile}/>
         <p className="user-name">{user.name}</p>
         <div className='fav_iconIhe'>
         <label className="like">

@@ -8,7 +8,8 @@ const defaultPicturePath = fileURLToPath(defaultPictureUrl);
 const userSchema = new mongoose.Schema({
   _id: { 
     type: mongoose.Schema.Types.ObjectId, 
-    auto: true },
+    auto: true 
+  },
   name: {
     type: String,
     required: true
@@ -34,14 +35,28 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  birthday:{
+  birthday: {
     type: Date,
   },
   userType: {
     type: String
   },
-  imagePaths: { type: String }
-});
+  imagePaths: {
+    type: String
+  },
+  followers: {
+    type: Array,
+    default: []
+  },
+  followings: {
+    type: Array,
+    default: []
+  },
+  socketId: {
+    type: String
+  }
+}, { timestamps: true });
+
 
 userSchema.index({ email: 1 }, { unique: true }); 
 const User = mongoose.model('User', userSchema);
