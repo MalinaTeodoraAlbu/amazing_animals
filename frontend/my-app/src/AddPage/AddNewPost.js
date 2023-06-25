@@ -1,4 +1,4 @@
-import '../index.css';
+import '../style/index.css';
 import { useState, useEffect,useRef } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

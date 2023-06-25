@@ -38,9 +38,11 @@ const savedPostsCollection = dbo.collection('Saved Posts');
 const FriendsCollection = dbo.collection('Friends');
 const ConversationCollection = dbo.collection('Conversations');
 const MessagesCollection = dbo.collection('Messages');
+const NotificationsCollection = dbo.collection("Notifications");
 
 
 mainRouter.put('/comments/:id', async (req, res) => {
+  
   try {
     const id = new ObjectId(req.params.id);
       const body = req.body;
@@ -103,16 +105,49 @@ mainRouter.get('/comments', async (req, res) => {
   }
 });
 
+mainRouter.get("/notifications", async(req, res) => {
+  try{
+    const notifications = await NotificationsCollection.find().toArray();
+    res.status(200).send(notifications);
+  }catch (error){
+    res.status(500).send(error)
+    console.log(err)
+  }
+})
+
+
 // Create a new comment
 mainRouter.post('/comments', async (req, res) => {
   try {
     const newComment = new Comment(req.body);
     const result = await commentCollection.insertOne(newComment);
+
+    const post = await postCollection.findOne({ _id: new ObjectId(newComment.postID) });
+
+    if (!post) {
+      return res.status(404).send({ message: 'Post not found' });
+    }
+    console.log(newComment.userid)
+
+
+    const newNotification = {
+      idPOST: newComment.postID,
+      idUSER: newComment.userid,
+      ownerId: post.userid, 
+      type: 'comment',
+      isview: false,
+      createdAt: new Date()
+    };
+
+    await NotificationsCollection.insertOne(newNotification);
+
     res.status(200).send(result);
   } catch (err) {
     res.status(500).send(err);
+    console.log(err)
   }
 });
+
 
 
 mainRouter.post('/savedPost', async (req, res) => {
@@ -140,6 +175,24 @@ mainRouter.get('/comments/:id', async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+
+mainRouter.get('/notifications/:id/not', async (req, res) => {
+  try {
+    const id = new ObjectId(req.params.id);
+    const notifications = await NotificationsCollection.findOne({ _id: id });
+    if (notifications) {
+      res.status(200).send(notifications);
+    } else {
+      res.status(404).send('notifications not found');
+    }
+  } catch (error) {
+    res.status(500).send(error);
+    console.log(error);
+  }
+});
+
+
 
 // Get a saved post by id
 mainRouter.get('/savedPost/:id', async (req, res) => {
@@ -198,6 +251,17 @@ mainRouter.post('/medicalRecord', async (req, res, next) => {
 
 
 
+// Get all notifications records for a user
+mainRouter.get('/notifications/:USERID', async (req, res) => {
+  try {
+    const userID = new ObjectId(req.params.USERID);
+    const notifications = await NotificationsCollection.find({ ownerId: userID }).toArray();
+    res.status(200).send(notifications);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 // Get all medical records for an animal
 mainRouter.get('/animals/:animalid/medicalR', async (req, res) => {
   try {
@@ -211,10 +275,7 @@ mainRouter.get('/animals/:animalid/medicalR', async (req, res) => {
 
 
 
-
-
-
-
+//LOGIN
 
 mainRouter.post('/login', async (req, res, next) => {
   try {
@@ -344,4 +405,4 @@ mainRouter.put("/:id/unfollow", async (req, res) => {
 
 module.exports = {mainRouter, userCollection, savedPostsCollection, 
   postCollection, commentCollection, FriendsCollection,
-   medicalRecordCollection, animalCollection, ConversationCollection, MessagesCollection};
+   medicalRecordCollection, animalCollection, ConversationCollection, MessagesCollection,NotificationsCollection};

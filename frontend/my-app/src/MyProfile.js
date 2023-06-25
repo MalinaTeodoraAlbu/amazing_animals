@@ -8,7 +8,7 @@ import prev from './media/left.png'
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { useState, useEffect } from 'react';
-import './index.css';
+import './style/index.css';
 
 function MyProfile() {
   const [user, setUser] = useState(null);

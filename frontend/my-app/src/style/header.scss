@@ -1,0 +1,75 @@
+// header.scss
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background-color: white;
+  max-width: 800px;
+  min-width: 800px;
+  max-height: 500px;
+  min-height: 500px;
+  border-radius: 20px;
+}
+
+.popup_container {
+  display: none;
+  margin-top: -1.5%;
+  z-index: 9999;
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  background-color: rgba(197, 131, 245, 0.5);
+}
+
+.line {
+  border: none;
+  border-top: 1px solid rgb(133, 78, 217);
+  margin-top: 10px;
+}
+
+.dialog h2{
+  margin-top: 2px;
+  margin-left: 2px;
+  padding: 10px;
+  color: #645CBB;
+}
+
+.notification_box {
+  background-color: #A084DC;
+  margin-left: 50px;
+  margin-top: 20px;
+  width: 700px;
+  height: 100px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.header-content_pop{
+  display: flex;
+  align-items: center;
+}
+.header-content_pop button{
+  float: right;
+  right: 0;
+  margin-left: auto;
+}
+
+.notification_box p {
+  color: white;
+  margin-left: 10px;
+}
+
+.notification_box img {
+  width: 140px;
+  height: 80px;
+  margin-left: 10px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.popup_container.open {
+  display: block;
+}

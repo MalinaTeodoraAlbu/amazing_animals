@@ -1,4 +1,4 @@
-
+import './style/index.css';
 import io from "socket.io-client";
 import React, { useEffect, useState } from "react";
 

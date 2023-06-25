@@ -1,4 +1,4 @@
-import './index.css';
+import './style/index.css';
 
 function Navbar() {
   function handleToggleClick() {

@@ -1,5 +1,5 @@
 import Navbar from "./Navbar";
-import './index.css';
+import './style/index.css';
 import './index.scss';
 import axios from 'axios';
 import IconButton from '@mui/material/IconButton';
@@ -10,9 +10,9 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 import {useState, useEffect} from 'react';
 const userID_LOCAL = localStorage.getItem('userId');
+console.log("AICI BA",userID_LOCAL)
 
 function Favourites() {
-  const userId = localStorage.getItem('userId');
   return (
     <div className="ListOfFavourites" >
      <div className="ListOfFavourites_container">

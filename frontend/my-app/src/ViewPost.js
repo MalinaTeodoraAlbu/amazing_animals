@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './index.css';
+import './style/index.css';
 import './index.scss';
 import { useParams } from 'react-router-dom';
 import ListComments from './function/ListComments.js';

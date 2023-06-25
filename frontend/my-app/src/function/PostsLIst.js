@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../index.css';
+import '../style/index.css';
 import Button from '@mui/material/Button';
 import '../index.scss';
 import ListComments from './ListComments.js';
@@ -23,7 +23,6 @@ function PostsList() {
     newSelectedPosts.set(postId, !selectedPosts.get(postId)); 
     setSelectedPosts(newSelectedPosts); 
   };
-  
   
 
   useEffect(() => {
@@ -205,7 +204,7 @@ function User({ userid, postID }) {
       setIsSaved(false);
     } else {
       const savedPost = {
-        userID: userid,
+        userID: userId,
         postID: postID
       };
       const res = await fetch(`http://localhost:7070/api/savedPost`, {
@@ -230,13 +229,14 @@ function User({ userid, postID }) {
       <div className="user-info_b">
         <img src={picture} alt="Profile Picture" onClick={handleLooKProfile}/>
         <p className="user-name">{user.name}</p>
-        <div className='fav_iconIhe'>
-        <label className="like">
-        <input type="checkbox" checked={isSaved} onClick={handleSavedPost}/>
-        <div className="hearth"/>
-      </label>
-     
+        {userid !== userId && (
+             <div className='fav_iconIhe'>
+           <label className="like">
+           <input type="checkbox" checked={isSaved} onClick={handleSavedPost}/>
+           <div className="hearth"/>
+         </label>
         </div>
+         )}
         {userid === userId && (
          <div>
          <div

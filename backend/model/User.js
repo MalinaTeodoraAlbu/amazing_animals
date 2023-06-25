@@ -39,7 +39,8 @@ const userSchema = new mongoose.Schema({
     type: Date,
   },
   userType: {
-    type: String
+    type: String,
+    default: "Standard"
   },
   imagePaths: {
     type: String

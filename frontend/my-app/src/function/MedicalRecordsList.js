@@ -1,5 +1,5 @@
 import React from 'react';
-
+import '../style/index.css';
 function MedicalRecordsList(props) {
   const { medicalRecords } = props;
   console.log(medicalRecords)

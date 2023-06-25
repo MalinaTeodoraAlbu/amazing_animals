@@ -1,6 +1,7 @@
 import React from 'react';
 import pic from '../media/e7f4f592f2f2f1d212ca1e225ef46360.jpg'
 import { jsPDF } from "jspdf";
+import '../style/index.css';
 
 function AnimalProfile(props) {
   const { selectedAnimal } = props;

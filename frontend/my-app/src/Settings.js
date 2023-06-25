@@ -1,9 +1,11 @@
 
-import './index.css';
+import './style/index.css';
+import './style/settings.css'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import subscriptionOptions from './setari/subscriptionData';
 
-function Settings() {
+function Settings(props) {
   const [toggleState, setToggleState] = useState(1);
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState(null);
@@ -39,6 +41,9 @@ function Settings() {
     }
   };
 
+  const handleSubscriptions = () => {
+    props.setIsPopupOpenSub(true);
+  };
 
   console.log("here is ",pictureA)
 
@@ -111,7 +116,7 @@ function Settings() {
           className={toggleState === 3 ? "tabs active-tabs" : "tabs"}
           onClick={() => toggleTab(3)}
         >
-         Privacy
+         Manage Subscription
         </button>
         <button
           className={toggleState === 4 ? "tabs active-tabs" : "tabs"}
@@ -185,7 +190,6 @@ function Settings() {
         ) : (
           <div className="user_edit_buttons">
           <button onClick={handleEdit}>edit</button>
-          <button>Change password</button>
             </div>
         )}
 
@@ -207,7 +211,95 @@ function Settings() {
         <div
           className={toggleState === 3 ? "content-set  active-content" : "content-set"}
         >
-          <p>This is the content for tab 3.</p>
+          <div className='subscriptions-container'>
+           <div className='subscriptions'>
+          {user && user.userType === 'Standard' && ( 
+            <div>
+           <h1>Subscriptions : {user.userType}</h1>
+           <div className="subscriptions_">
+            {subscriptionOptions.map((option) => {
+              if (option.type === user.userType) {
+                return (
+                  <div key={option.type}>
+                    <h2>Current Subscription</h2>
+                    <p>Type: {option.type}</p>
+                    <h3>Benefits:</h3>
+                    <ul>
+                      {option.benefits.map((benefit, index) => (
+                        <li key={index}>{benefit}</li>
+                      ))}
+                    </ul>
+                    <button onClick={handleSubscriptions}>Upgrade Subscription</button>
+                  </div>
+                );
+              }
+              return null;
+            })}
+          </div>
+
+          </div>)}
+          {user && user.userType === 'Premium' && ( 
+                      <div>
+           <h1>Subscriptions : {user.userType}</h1>
+           <div className="subscriptions_">
+            {subscriptionOptions.map((option) => {
+              if (option.type === user.userType) {
+                return (
+                  <div key={option.type}>
+                    <h2>Current Subscription</h2>
+                    <p>Type: {option.type}</p>
+                    <p>Billing Period: {option.billingPeriod}</p>
+                    <p>Price: {option.price} RON</p>
+                    <h3>Benefits:</h3>
+                    <ul>
+                      {option.benefits.map((benefit, index) => (
+                        <li key={index}>{benefit}</li>
+                      ))}
+                    </ul>
+                    <button>Cancel subscription</button>
+                  </div>
+                  
+                );
+              }
+              return null;
+            })}
+          </div>
+
+          </div>)}
+          {user && user.userType === 'Vet' && ( 
+                     <div>
+           <h1>Subscriptions : {user.userType}</h1>
+           <div className="subscriptions_">
+            {subscriptionOptions.map((option) => {
+              if (option.type === user.userType) {
+                return (
+                  <div key={option.type}>
+                    <h2>Current Subscription</h2>
+                    <p>Type: {option.type}</p>
+                    <p>Billing Period: {option.billingPeriod}</p>
+                    <p>Price: {option.price} RON</p>
+                    <h3>Benefits:</h3>
+                    <ul>
+                      {option.benefits.map((benefit, index) => (
+                        <li key={index}>{benefit}</li>
+                      ))}
+                    </ul>
+                    <button>Cancel subscription</button>
+                  </div>
+                );
+              }
+              return null;
+            })}
+          </div>
+
+          </div>)}
+          <button>View All Subscriptions</button>
+          </div>
+          
+        </div>
+        <div className='payment_div'>
+            
+        </div>
         </div>
         <div
           className={toggleState === 4 ? "content-set  active-content" : "content-set"}

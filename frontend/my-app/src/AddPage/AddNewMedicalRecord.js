@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../index.css';
+import '../style/index.css';
 
 function AddNewMedicalRecord() {
   const userId = localStorage.getItem('userId');

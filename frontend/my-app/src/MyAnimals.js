@@ -1,5 +1,5 @@
 import Navbar from "./Navbar";
-import './index.css';
+import './style/index.css';
 import moment from 'moment';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -7,6 +7,7 @@ import AnimalProfile from "./function/AnimalProfile";
 import MedicalRecordsList from "./function/MedicalRecordsList";
 import { jsPDF } from "jspdf";
 
+import imgData from './media/Amzing_logo.png';
 
 function MyAnimals() {
   const userId = localStorage.getItem('userId');
@@ -14,6 +15,8 @@ function MyAnimals() {
   const [animals, setAnimals] = useState([]);
   const [medicalRecords, setMedicalRecords] = useState([]);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
+
+  
 
   useEffect(() => {
     axios.get(`http://localhost:7070/api/users/${userId}`)
@@ -54,16 +57,19 @@ function MyAnimals() {
     let startY = 15;
   
     // Define styles for the report
-    const reportTitleStyle = { fontSize: 18, fontWeight: 'bold', textAlign: 'left' };
-    const reportInfoStyle = { fontSize: 10, textAlign: 'right' };
-    const sectionTitleStyle = { fontSize: 16, fontWeight: 'bold', margin: { top: 15 } };
-    const itemStyle = { fontSize: 12, margin: { top: 5 } };
+  const reportTitleStyle = { fontSize: 14, fontWeight: 'bold', textAlign: 'left' };
+  const reportInfoStyle = { fontSize: 8, textAlign: 'right' };
+  const sectionTitleStyle = { fontSize: 12, fontWeight: 'bold', margin: { top: 10 } };
+  const itemStyle = { fontSize: 10, margin: { top: 4 } };
+
   
     // Function to check if there is enough space on the page
     const checkIfNewPageNeeded = (y, spaceNeeded) => {
       return y + spaceNeeded > pageHeight - 15;
     };
   
+    doc.addImage(imgData, 'JPEG', 160, 25, 40, 40);
+
     // Add title
     doc.setFontSize(reportTitleStyle.fontSize);
     doc.setFont(reportTitleStyle.fontWeight);

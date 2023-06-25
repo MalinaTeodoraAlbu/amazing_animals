@@ -1,4 +1,4 @@
-import './index.css';
+import './style/index.css';
 import PostsList from "./function/PostsLIst";
 import SearchBar from "./SearchBar";
 
