@@ -4,6 +4,10 @@ import './style/index.css';
 import './index.scss';
 import { useParams } from 'react-router-dom';
 import ListComments from './function/ListComments.js';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 const userId = localStorage.getItem('userId');
 
@@ -232,33 +236,19 @@ function User({ userid, postID }) {
       <div className="user-info_b">
         <img src={picture} alt="Profile Picture" onClick={handleLooKProfile}/>
         <p className="user-name">{user.name}</p>
-        <div className='fav_iconIhe'>
-        <label className="like">
-        <input type="checkbox" checked={isSaved} onClick={handleSavedPost}/>
-        <div className="hearth"/>
-      </label>
-     
+                {userid !== userId ? (
+            <div className='fav_iconIhe'>
+           <label className="like">
+           <input type="checkbox" checked={isSaved} onClick={handleSavedPost}/>
+           <div className="hearth"/>
+         </label>
         </div>
-        {userid === userId && (
+         ): (
          <div>
-         <div
-           className="context-menu"
-           onClick={() => setShowContextMenu(!showContextMenu)}
-         >
-          ...
-         </div>
-         {showContextMenu && (
-           <div className="context-menu-options">
-             <div className='context-menu-opt' onClick={handleDelete}>
-             <img src="https://img.icons8.com/material-outlined/24/null/filled-trash.png"/>
-             </div>
-             <div  className='context-menu-opt' onClick={handleEdit}>
-             <img src="https://img.icons8.com/ios/50/null/edit--v1.png"/>
-             </div>
-           </div>
-         )}
+         
        </div>
         )}
+         
         
       </div>
      

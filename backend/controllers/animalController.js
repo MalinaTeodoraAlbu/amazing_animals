@@ -67,33 +67,39 @@ const updateAnimal = async (req, res, next) => {
       birthday: req.body.birthday,
       weight: req.body.weight,
       sterilizer: req.body.sterilizer,
-
     });
+
     console.log(updateAnimal)
+
     if (req.file) {
       let pathImage = (req.file.path).replaceAll("\\", "/");
-      updateAnimal.imagePaths =pathImage;
-      deleteImages(animal.imagePaths)
-    }
-    else{
-      updateAnimal.imagePaths =animal.updateUser;
-    }
-     
-      
-      const result = await animalCollection.findOneAndUpdate(
-        { _id: id },
-        { $set: updateAnimal },
-        { returnDocument : "after" },
-        { returnOriginal: false }
-      );
-      if (!result.value) {
-        return res.status(404).send('animal not found');
+      updateAnimal.imagePaths = pathImage;
+
+      if (animal.imagePaths) {
+        deleteImages(animal.imagePaths);
       }
-      res.status(200).send(result.value);
+    } else {
+      updateAnimal.imagePaths = animal.imagePaths;
+    }
+
+    const result = await animalCollection.findOneAndUpdate(
+      { _id: id },
+      { $set: updateAnimal },
+      { returnDocument: "after" },
+      { returnOriginal: false }
+    );
+
+    if (!result.value) {
+      return res.status(404).send('Animal not found');
+    }
+
+    res.status(200).send(result.value);
   } catch (err) {
     res.status(500).send(err);
+    console.log(err);
   }
 };
+
 
 // Get an animal by id
 const getTheAnimalByID = async (req, res) => {

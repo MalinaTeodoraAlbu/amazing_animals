@@ -2,6 +2,9 @@ import React from 'react';
 import pic from '../media/e7f4f592f2f2f1d212ca1e225ef46360.jpg'
 import { jsPDF } from "jspdf";
 import '../style/index.css';
+import { IconButton } from '@mui/material';
+import { amber } from '@mui/material/colors';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 function AnimalProfile(props) {
   const { selectedAnimal } = props;
@@ -11,29 +14,36 @@ function AnimalProfile(props) {
     window.location.href = `/editAnimal/${selectedAnimal._id}`;
   };
   
-  
 
   return (
     <div className="Animals_profile_container">
       {selectedAnimal ? (
         <>
           <div className="Animals_photo_container">
-            <img src={selectedAnimal.picture} alt={selectedAnimal.name} className="selected_animal_photo" />
+            <img src={`http://localhost:7070/${selectedAnimal.imagePaths}`} alt={selectedAnimal.name} className="selected_animal_photo" />
           </div>
 
           <div className="Animals_details_container_">
             <div className="Animals_details_container_border">
               <h3>Specifications</h3>
-              <button className="add_new_animal edit" onClick={handleEdit} >Edit</button>
-              
+              <IconButton  onClick={handleEdit} disableRipple>
+            <ModeEditIcon fontSize="small" sx={{ color: amber[50] }} />
+          </IconButton>
             </div>
             <div className="Animals_details_container">
               <p>Name: {selectedAnimal.name}</p>
               <p>Species: {selectedAnimal.species}</p>
-              <p>Birthday: {selectedAnimal.birthday}</p>
+              <p>Birthday: {new Date(selectedAnimal.birthday).toLocaleDateString("en-GB")}</p>
               <p>Sex: {selectedAnimal.sex}</p>
               <p>Color: {selectedAnimal.color}</p>
               <p>Weight: {selectedAnimal.weight}</p>
+              {selectedAnimal.sterilizer === 'true'? 
+              ( <p>Sterilizer : Yes </p>) : (
+                <p>Sterilizer : No </p>
+              )
+
+              }
+             
             </div>
           </div>
         </>
@@ -46,10 +56,10 @@ function AnimalProfile(props) {
           <div className="Animals_details_container_">
             <div className="Animals_details_container_border">
               <h3>Specifications</h3>
-              <button className="add_new_animal">Edit</button>
+    
             </div>
             <div className="Animals_details_container">
-              Select an animal!
+              <h2> Select an animal!</h2>
             </div>
           </div>
         </>

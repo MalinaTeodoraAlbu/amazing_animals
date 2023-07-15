@@ -16,7 +16,7 @@ function Favourites() {
   return (
     <div className="ListOfFavourites" >
      <div className="ListOfFavourites_container">
-     <div className="ListOfFavourites_search"></div>
+   
       <div className="ListOfFavourites_">
         <ListOfFav></ListOfFav>
          </div>

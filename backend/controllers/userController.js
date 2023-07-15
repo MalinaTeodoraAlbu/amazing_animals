@@ -96,10 +96,13 @@ const getUserFromDBById = async (req, res) => {
         if (req.file) {
           let pathImage = (req.file.path).replaceAll("\\", "/");
           updateUser.imagePaths =pathImage;
-          deleteImages(user.imagePaths)
+          if(user.imagePaths){
+            deleteImages(user.imagePaths)
+          }
+          
         }
         else{
-          updateUser.imagePaths =user.updateUser;
+          updateUser.imagePaths =user.imagePaths;
         }
         const result = await userCollection.findOneAndUpdate(
           { _id: id },

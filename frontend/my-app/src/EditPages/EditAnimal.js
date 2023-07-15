@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { useParams } from 'react-router-dom';
-
+import axios from 'axios';
 
 function EditAnimal() {
   const userId = localStorage.getItem('userId');
@@ -25,116 +25,52 @@ function EditAnimal() {
         fetch(`http://localhost:7070/api/animals/${animalId}`)
         .then(response => response.json())
         .then(data => {
+          setAnimal(data)
           setName(data.name)
           setSpecies(data.species)
           setSex(data.sex)
-          setPicture(data.picture)
+          setPicture(`http://localhost:7070/${data.imagePaths}`)
           setColor(data.color)
-          setPictureSrc(data.picture)
           setWeight(data.weight)
-          setBirthday(data.birthday)
+          setBirthday(new Date(data.birthday).toISOString().split("T")[0])
           setSterilizer(data.sterilizer)         
         });
     }
 }, [animalId])
 
 
-
-
 const handlePictureChange = (event) => {
   const file = event.target.files[0];
+  const reader = new FileReader();
+  setPictureSrc(event.target.files[0])
+  
+  reader.onloadend = () => {
+    setPicture(reader.result);
+    
+  };
   if (file) {
-    const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPictureSrc(reader.result);
-      setPicture(file);
-    }
+    console.log(file)
   }
 };
 
     const handleSave = async (event) => {
         event.preventDefault();
-        const reader = new FileReader();
-        reader.readAsDataURL(picture);
-        reader.onloadend = async () => {
-          const animal = {
-            name,
-            species,
-            color,
-            sex,
-            weight,
-            picture: reader.result,
-            birthday,
-          };
+        const formData = new FormData();
+        formData.append('userid', userId);
+        formData.append('name', name);
+        formData.append('species', species);
+        formData.append('color', color);
+        formData.append('sex', sex);
+        formData.append('weight', weight);
+        formData.append('birthday', birthday);
+        console.log(birthday)
+        formData.append('sterilizer', sterilizer)
+        formData.append('imagePaths', pictureSrc);
 
-        if(name === ''){
-            toast.error("Empty  name", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-            return;
+        const res =  axios.put(`http://localhost:7070/api/animal/${animalId}`, formData, {});
+        window.location.href = '/myAnimals';
           }
-          if(species === ''){
-            toast.error("Empty species", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-            return;
-          }
-          if(sex === '-'){
-            toast.error("Empty sex", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-            return;
-          }
-          if(weight === ''){
-            toast.error("Empty weight", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-            return;
-          }
-          const res = await fetch(`http://localhost:7070/api/animals/${animalId}`, {
-            method: "put",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(animal),
-          });
-          
-          if(res.status === 200){ 
-            toast.success("Succesfully!", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 1000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-            window.location.href = '/myAnimals' ;
-          }else {
-            toast.error("Internal server error", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-              style: {
-                marginTop: "5rem"
-              }
-            });
-          }
-          }}
 
           const handleCancel = async (event) => {
             event.preventDefault();
@@ -171,7 +107,7 @@ const handlePictureChange = (event) => {
         <div className="container_add_new_animal_b">
           <label htmlFor="picture">Picture:</label>
           <div className="circle-image">
-            <img src={pictureSrc} alt="animal picture" id="picture" />
+            <img src={picture} alt="animal picture" />
           </div>
           <input type="file" id="picture" name="picture" onChange={handlePictureChange} />
           <label htmlFor="birthday">Birthday:</label>

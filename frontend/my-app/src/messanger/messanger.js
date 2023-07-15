@@ -7,6 +7,7 @@ import {io} from "socket.io-client";
 
 export default function Messanger() {
   const [user, setUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -14,6 +15,7 @@ export default function Messanger() {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const socket = useRef();
   const scrollRef = useRef();
+  const [users, setUsers] = useState([]);
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
@@ -31,6 +33,9 @@ export default function Messanger() {
     });
   }, []);
 
+  const handleLooKProfile = () => {
+    window.location.href = `/user/${user._id}`;
+  };
   useEffect(() => {
     if (userId) {
       axios.get(`http://localhost:7070/api/users/${userId}`)
@@ -112,44 +117,106 @@ export default function Messanger() {
     }
   };
 
+  useEffect(() => {
+    axios
+      .get(`http://localhost:7070/api/users/${userId}`)
+      .then((res) => {
+        setUser(res.data);
+        socket.current.emit("addUser", userId);
+      })
+      .catch((err) => console.error(err));
+  }, [userId, socket]);
+  
+  useEffect(() => {
+    axios
+      .get("http://localhost:7070/api/users")
+      .then((res) => {
+        setUsers(res.data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  const filteredConversations = conversations.filter((conversation) => {
+    const memberNames = conversation.members.map((memberId) => {
+      const member = users.find((user) => user._id === memberId);
+      return member ? member.name.toLowerCase() : "";
+    });
+  
+    const searchString = searchQuery.toLowerCase();
+    return memberNames.some((name) => name.includes(searchString));
+  });
 
   return (
     <div className="messanger">
       <div className="chatMenu">
         <div className="chatMenuWrapper">
-          <input placeholder="Search for friends" className="chatMenuInput" />
-          {[conversations].map((c) => (
-          <div key={c._id} onClick={() => setCurrentChat(c)}>
-            <Conversation conversation={c} currentUser={user} />
-          </div>
-        ))}
+        <input
+    placeholder="Search for friends"
+    className="chatMenuInput"
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+  />
+              {filteredConversations.map((c) => (
+        <div key={c._id} onClick={() => setCurrentChat(c)}>
+          <Conversation conversation={c} currentUser={user} />
+        </div>
+      ))}
+
         </div>
       </div>
       <div className="chatBox">
-        <div className="chatBoxWrapper">
-          {
-            currentChat ?(
-          <>
-          <div className="chatBoxTop">
-          {messages.map((m) => (
-                    <div ref={scrollRef}>
-                      <Message message={m} own={m.sender === user._id} />
-                    </div>
-                  ))}
+        
+      <div className="chatBoxWrapper">
+  <div className="div_chat_sticky">
+    {currentChat?.members.map((memberId) => {
+      if (memberId !== user?._id) {
+        const member = users.find((user) => user._id === memberId);
+        if (member) {
+          return (
+            <div className="div_chat_sticky_details" key={member._id}>
+              <img
+                src={`http://localhost:7070/${member.imagePaths}`}
+                alt="Profile"
+                className="profilePicture"
+                onClick={handleLooKProfile}
+              />
+              <p className="username">{member.name}</p>
+            </div>
+          );
+        }
+      }
+      return null;
+    })}
+  </div>
+  {currentChat ? (
+    <>
+      <div className="chatBoxTop">
+        {messages.map((m) => (
+          <div ref={scrollRef}>
+            <Message message={m} own={m.sender === user?._id} />
+          </div>
+        ))}
+      </div>
 
+      <div className="chatBoxBottom">
+        <textarea
+          className="chatMessageInput"
+          placeholder="write something..."
+          onChange={(e) => setNewMessage(e.target.value)}
+          value={newMessage}
+        ></textarea>
+        <button className="chatSubmitButton" onClick={handleSubmit}>
+          Send
+        </button>
+      </div>
+    </>
+  ) : (
+    <span className="noConversationText">
+      Open a conversation to start a chat.
+    </span>
+  )}
 </div>
 
-          <div className="chatBoxBottom">
-            <textarea
-              className="chatMessageInput"
-              placeholder="write something..."
-              onChange={(e)=>setNewMessage(e.target.value)}
-              value={newMessage}
-            ></textarea>
-            <button className="chatSubmitButton" onClick={handleSubmit}>Send </button>
-          </div>
-</ > ):( <span className="noConversationText"> Open a conversation to start a chat.</span>)}
-        </div> 
       </div>
      
     </div>

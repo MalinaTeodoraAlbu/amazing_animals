@@ -11,6 +11,8 @@ export default function Message({ message, own }) {
       .then(res => setUser(res.data))
       .catch(err => console.error(err));
   }, []);
+  console.log(message)
+  console.log("REPETARE MESAJ 1")
   return (
     <div className={own ? "message own" : "message"}>
       <div className="messageTop">

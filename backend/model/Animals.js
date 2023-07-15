@@ -18,7 +18,7 @@ const animalSchema = new mongoose.Schema({
     type: Date
   },
   weight: {
-    type: Number
+    type: String
   },
   userid: {
     type: mongoose.Schema.Types.ObjectId,
@@ -28,7 +28,7 @@ const animalSchema = new mongoose.Schema({
     type: String
   },
   sterilizer: {
-    type: Boolean
+    type: String
   }
 });
 

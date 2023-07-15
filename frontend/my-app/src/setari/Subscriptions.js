@@ -2,6 +2,7 @@ import '../style/index.css';
 import '../style/settings.css';
 import { Elements } from "@stripe/react-stripe-js";
 import IconButton from '@mui/material/IconButton';
+import { amber } from '@mui/material/colors';
 import ClearIcon from '@mui/icons-material/Clear';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -27,9 +28,6 @@ function Subscriptions(props) {
     // You can perform any other necessary actions here
   };
 
-  const handlePurchase = async () => {
-   
-  };
 
   return (
     <div className={`popup_container_sub ${props.isPopupOpenSub ? 'open' : ''}`}>
@@ -38,9 +36,8 @@ function Subscriptions(props) {
           <div className='payment_plan_section'>
             
             <div className='sub_border_chose_plan'>
-              <h3>Payment</h3>
-              <IconButton aria-label="notif" color="secondary" onClick={handleClosePopupSub}>
-              <ClearIcon />
+              <IconButton aria-label="notif"  onClick={handleClosePopupSub}>
+              <ClearIcon sx={{ color: amber[50] }} />
             </IconButton>
             </div>
             
@@ -52,11 +49,10 @@ function Subscriptions(props) {
           </div>
         ) : (
           <div className='choose_plan_section'>
-            <IconButton aria-label="notif" color="secondary" onClick={handleClosePopupSub}>
-              <ClearIcon />
+            <IconButton aria-label="notif"  onClick={handleClosePopupSub}>
+              <ClearIcon sx={{ color: amber[50] }} />
             </IconButton>
             <div className='sub_border_chose_plan'>
-              <h3>Choose a subscription</h3>
             </div>
             {subscriptionOptions.map((option) => {
               return (
@@ -73,7 +69,7 @@ function Subscriptions(props) {
                         </ul>
                       </div>
                       <p>{option.price} RON / {option.billingPeriod}</p>
-                      <button onClick={() => handleUpgrade(option)}>Upgrade</button>
+                      <button className="button_sub" onClick={() => handleUpgrade(option)}>Upgrade</button>
                     </div>
                   )}
                   {option.type === 'Vet' && (
@@ -88,7 +84,7 @@ function Subscriptions(props) {
                         </ul>
                       </div>
                       <p>{option.price} RON / {option.billingPeriod}</p>
-                      <button onClick={() => handleUpgrade(option)}>Upgrade</button>
+                      <button className="button_sub" onClick={() => handleUpgrade(option)}>Upgrade</button>
                     </div>
                   )}
                 </div>

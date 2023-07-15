@@ -49,6 +49,7 @@ const insertPostIntoDB = async (req, res, next) => {
       res.status(200).send(result)
     } catch (err) {
       res.status(500).send(err);
+      console.log(err)
     }
 };
 
@@ -71,7 +72,6 @@ const updatePost = async (req, res, next) => {
         tag: req.body.tag,
         datePosted: req.body.datePosted,
         userid: req.body.userid,
-        picture: req.body.picture,
         name: req.body.name,
         species: req.body.species,
         sex: req.body.sex,
@@ -85,13 +85,15 @@ const updatePost = async (req, res, next) => {
       if (req.file) {
         let pathImage = (req.file.path).replaceAll("\\", "/");
         updatePost.imagePaths =pathImage;
-        deleteImages(post.imagePaths)
+        if(post.imagePaths){
+          deleteImages(post.imagePaths)
+        }
+       
       }
       else{
-        updatePost.imagePaths =post.updateUser;
+        updatePost.imagePaths =post.imagePaths;
       }
        
-        
         const result = await postCollection.findOneAndUpdate(
           { _id: id },
           { $set: updatePost },

@@ -29,7 +29,7 @@ export default function Conversation({ conversation, currentUser }) {
     <div className="conversation">
      <img className="conversationImg" src={picture}></img>
      <span className="conversationName">{user?.name}</span>
-     <div className="chatOnlineBadge"></div>
+     
     </div>
   );
 }

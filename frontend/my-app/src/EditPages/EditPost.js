@@ -15,6 +15,7 @@ function EditPost() {
     const [category, setCategory] = useState("");
     const [tag, setTag] = useState("");
     const [pictureSrc, setPictureSrc] = useState('');
+    const [pictureSrcAnimal, setPictureSrcAnimal] = useState('');
     const [picture, setPicture] = useState("");
     const [name, setName] = useState("");
     const [species, setSpecies] = useState("");
@@ -29,6 +30,7 @@ function EditPost() {
     const [isArrowRotated, setIsArrowRotated] = useState(false);
 
 
+
     useEffect(() => {
       if (animalId != null) {
         axios
@@ -40,10 +42,8 @@ function EditPost() {
             setSex(animalData.sex);
             setColor(animalData.color);
             setWeight(animalData.weight);
-            setPictureSrc(animalData.picture);
             setBirthday(animalData.birthday);
             setSterilizer(animalData.sterilizer);
-            setLocation(animalData.location);
           })
           .catch((err) => console.error(err));
       }
@@ -67,11 +67,11 @@ function EditPost() {
               setName(data.name)
               setSpecies(data.species)
               setSex(data.sex)
-              setPicture(data.imagePaths)
               setColor(data.color)
               setPicture(`http://localhost:7070/${data.imagePaths}`);
+              setPictureSrcAnimal(data.imagePaths)
               setWeight(data.weight)
-              setBirthday(data.birthday)
+              setBirthday(new Date(data.birthday).toISOString().split("T")[0])
               setSterilizer(data.sterilizer)      
               setLocation(data.location)   
               console.log(picture)    
@@ -101,73 +101,90 @@ function EditPost() {
       }
     };
   
-
     const handleSubmit = async (event) => {
       event.preventDefault();
+      
       const formData = new FormData();
-      formData.append('imagePaths', pictureSrc);
       formData.append('userid', userId);
       formData.append('content', content);
       formData.append('location', location);
       formData.append('category', category);
       formData.append('tag', tag);
+      if (pictureSrc) {
+        formData.append('imagePaths', pictureSrc);
+      }
+      if(category=== 'Lovely'){
+        try {
+          const res = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
+          if(res.status === 200){
+            window.location.href = `/feed`;
+          }
+        } catch (error) {
+          console.error(error);
+        toast.error('Internal server error', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+          style: {
+            marginTop: '5rem'
+          }
+        });
+        }
+      }
+      else {
+    
+        
       formData.append('name', name);
       formData.append('species', species);
       formData.append('color', color);
       formData.append('sex', sex);
-      formData.append('weight', weight);
-      formData.append('birthday', birthday);
+      formData.append('weight',  parseFloat(weight));
+      formData.append('birthday', new Date(birthday));
       formData.append('sterilizer', sterilizer);
+      try {
+          console.log('in try catch',[...formData]); 
+          const res = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
     
-      if (category === 'Lovely') {
-        const res = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
+            const formDataAnimal = new FormData();
+            formDataAnimal.append('userid', userId);
+            formDataAnimal.append('name', name);
+            formDataAnimal.append('species', species);
+            formDataAnimal.append('sex', sex);
+            formDataAnimal.append('color', color);
+            formDataAnimal.append('weight', weight);
+            formDataAnimal.append('birthday', birthday);
+            formDataAnimal.append('sterilizer', sterilizer);
+            console.log('before Animals',[...formDataAnimal]); 
+            console.log("before picture",pictureSrc)
+            console.log("before picture",pictureSrcAnimal)
+            if (pictureSrcAnimal) {
+              formDataAnimal.append('imagePaths', pictureSrcAnimal);
+              console.log(pictureSrc)
+            }
+            console.log(pictureSrc)
+            console.log('after Animals',[...formDataAnimal]); 
+
+         
+            if(res.status === 200){
+              window.location.href = `/feed`;
+            }
+          
     
-        if (res.status === 200) {
-          window.location.href = `/feed`;
-        }
-      } else {
-        const animalData = new FormData();
-        animalData.append('userid', userId);
-        animalData.append('name', name);
-        animalData.append('species', species);
-        animalData.append('sex', sex);
-        animalData.append('color', color);
-        animalData.append('weight', weight);
-        animalData.append('birthday', birthday);
-        animalData.append('sterilizer', sterilizer);
-        animalData.append('imagePaths', pictureSrc);
-    
-        if (saveAnimal === true) {
-          const animalRes = await axios.post(`http://localhost:7070/api/animal`, animalData);
-          console.log(animalRes);
-        }
-      }
-    
-      const res_post = await axios.put(`http://localhost:7070/api/posts/${postID}`, formData, {});
-    
-      if (res_post.status === 200) {
-        toast.success("Successfully!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1000,
-          style: {
-            marginTop: "5rem"
-          }
-        });
-        window.location.href = '/feed';
-      } else {
-        toast.error("Internal server error", {
+      } catch (error) {
+        console.error(error);
+        toast.error('Internal server error', {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000,
           style: {
-            marginTop: "5rem"
+            marginTop: '5rem'
           }
         });
       }
-    }
+      
+      }
     
     
+    };
 
-    
       return (
      
         <div className="add-new-post">
@@ -305,15 +322,7 @@ function EditPost() {
                   onChange={(e) => setSterilizer(e.target.checked)}
                 />
               </div>
-              <div className="form-control">
-              <label>Do you want to add this animal to your list?</label>
-              <input
-                type="checkbox"
-                id='checkbox_form'
-                checked={saveAnimal}
-                onChange={(e) => setSaveAnimal(e.target.checked)}
-              />
-            </div>
+             
             </div>
   
             <div className='r_wrap'>

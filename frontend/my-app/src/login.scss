@@ -228,6 +228,8 @@ form {
 /*search*/
 .SearchBar {
 margin-top: 5%;
+width: 80%;
+margin-left: 10%;
 $color: #5e5263;
 
 body {
@@ -245,11 +247,11 @@ body {
 App
 --------------------*/
 .search-form {
+	height: 50px;
   position: relative;
   top: 50%;
   left: 50%;
   width: 100%;
-  height: 40px;
   border-radius: 40px;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
   transform: translate(-50%, -50%);
@@ -263,8 +265,8 @@ App
 
 .search-input {
   position: absolute;
-  top: 10px;
-  left: 38px;
+  top: 20px;
+  left: 50px;
   font-size: 14px;
   background: none;
   color: #5a6674;
@@ -303,7 +305,7 @@ App
   position: absolute;
   text-align: right;
   top: 10px;
-  right: 15px;
+  right: 20px;
 
   div {
     position: relative;
@@ -322,11 +324,12 @@ App
     span {
       position: absolute;
       display: block;
+	  width: 50px;
       text-align: center;
       left: 50%;
       transform: translateX(-50%);
       opacity: 0;
-      background: #929AA3;
+      background: rgba(141, 107, 175,0.5);
       color: #fff;
       font-size: 9px;
       letter-spacing: 1px;
@@ -360,14 +363,7 @@ App
       cursor: pointer;
     }
     
-    svg {
-      height: 20px;
-      width: 20px;
-      fill: #5a6674;
-      opacity: 0.6;
-      transition: all .2s ease-in-out;
-      pointer-events: none;
-    }
+
     
     &:hover svg {
       opacity: 1;

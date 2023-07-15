@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import { useState, useEffect } from 'react';
 import './style/index.css';
 
-function MyProfile() {
+function MyProfile(props) {
   const [user, setUser] = useState(null);
   const [currentAnimalIndex, setCurrentAnimalIndex] = useState(0);
   const [animals, setAnimals] = useState([]);
@@ -19,7 +19,11 @@ function MyProfile() {
   const [postID, setPostID] = useState(null);
   const picture = user ? `http://localhost:7070/${user.imagePaths}` : '';
 
-
+  const handleListFriends = () => {
+    props.setisFriendPopupOpen(true);
+  }
+ 
+  
   useEffect(() => {
     axios.get(`http://localhost:7070/api/users/${userId}`)
       .then(res => setUser(res.data))
@@ -34,6 +38,7 @@ function MyProfile() {
       .catch(err => console.error(err));
   }, []);
 
+  
   const handleNext = () => {
     setCurrentAnimalIndex((currentAnimalIndex + 1) % animals.length);
   };
@@ -42,9 +47,9 @@ function MyProfile() {
     setCurrentAnimalIndex((currentAnimalIndex - 1 + animals.length) % animals.length);
   };
 
-  const handleView = (event) => {
+  const handleGOSettings = (event) => {
 
-    window.location.href = `/viewPost/${postID}`;
+    window.location.href = `/settings`;
   };
 
   return (
@@ -53,7 +58,7 @@ function MyProfile() {
         <div className="user_details_container">
          <div className='usDC'>
           <div className='circle'>
-          <IconButton aria-label="edit" color="secondary" >
+          <IconButton aria-label="edit" color="secondary" onClick={handleGOSettings} >
               <EditIcon fontSize="small"  />
             </IconButton>
           </div>
@@ -71,9 +76,8 @@ function MyProfile() {
               </>
             }
             <div className='under'>
-            <img src={follow} alt="Follow" />
-            <img src={message} alt="Follow"/>
-            <img src={friends} alt="Follow" />
+            <img src={follow} alt="Follow" onClick={handleListFriends} />
+        
             </div>
           </div>
          </div>
@@ -88,7 +92,7 @@ function MyProfile() {
       {animals.length > 0 && (
         <div className='container_det_animals_b'>
           {animals.length > 0 && (
-            <img src={animals[currentAnimalIndex].picture} alt={animals[currentAnimalIndex].name} />
+            <img src={`http://localhost:7070/${animals[currentAnimalIndex].imagePaths}`} alt={animals[currentAnimalIndex].name} />
           )}
         </div>
       )}
@@ -112,9 +116,8 @@ function MyProfile() {
         <div className="user_posts_a">
         <div className="posts_container">
   {posts.map(post => (
-    <div className="post_container" key={post._id} >
-      <img src={`http://localhost:7070/${post.imagePaths}`} alt={post.title} />
-      <button onClick={() => { window.location.href = `/viewPost/${post._id}` }}>View post</button>
+    <div className="post_container" key={post._id} onClick={() => { window.location.href = `/viewPost/${post._id}` }} >
+      <img src={`http://localhost:7070/${post.imagePaths}`} alt={post.title}  onClick={() => { window.location.href = `/viewPost/${post._id}` }}/>
     </div>
   ))}
 </div>

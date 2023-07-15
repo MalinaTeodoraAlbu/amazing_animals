@@ -28,7 +28,15 @@ function PostsList() {
   useEffect(() => {
     axios
       .get(`http://localhost:7070/api/posts`)
-      .then((res) => setPosts(res.data))
+      .then((res) => {
+        // Sort the posts by datePosted in descending order
+        const sortedPosts = res.data.sort((a, b) => {
+          const dateA = new Date(a.datePosted);
+          const dateB = new Date(b.datePosted);
+          return dateB - dateA;
+        });
+        setPosts(sortedPosts);
+      })
       .catch((err) => console.error(err));
   }, []);
 
@@ -118,7 +126,18 @@ function PostsList() {
 
                     
                   </section>
-            
+                  <div className='r_wrap_post'>
+                    <div
+                      className="s_round_post"
+                      onClick={() => {
+                        setSelectedPostId(post._id);
+                        toggleSection(post._id);
+                      }}
+                    >
+                      <div className="s_arrow_post"></div>
+                    </div>
+                    
+                  </div>
             
               </div>
               
@@ -145,6 +164,7 @@ function User({ userid, postID }) {
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [savedPostId, setSavedPostId] = useState(null);
+  const [savedPosts, setSavedPosts] = useState([]);
   const picture = user ? `http://localhost:7070/${user.imagePaths}` : '';
 
   useEffect(() => {
@@ -161,18 +181,16 @@ function User({ userid, postID }) {
       .catch((err) => console.error(err));
   }, [postID]);
 
-  useEffect(() => { 
-    const fetchSavedPosts = async () => {
-      const res = await fetch(`http://localhost:7070/api/users/${userid}/savedPosts`);
-      const savedPosts = await res.json();
-      const savedPost = savedPosts.find((post) => post.postID === postID);
-      if (savedPost) {
-        setSavedPostId(savedPost._id);
-        setIsSaved(true);
-      }
-    };
-    fetchSavedPosts();
-  }, [postID, userid]);
+  useEffect(() => {
+    fetch(`http://localhost:7070/api/users/${userId}/savedPosts`)
+      .then((response) => response.json())
+      .then((data) => {
+        const savedPostIds = data.map((post) => post.postID); 
+        setIsSaved(savedPostIds.includes(postID));
+      });
+  }, []);
+
+
 
   if (!user) {
     return <p>Loading...</p>;
@@ -229,15 +247,14 @@ function User({ userid, postID }) {
       <div className="user-info_b">
         <img src={picture} alt="Profile Picture" onClick={handleLooKProfile}/>
         <p className="user-name">{user.name}</p>
-        {userid !== userId && (
-             <div className='fav_iconIhe'>
+        {userid !== userId ? (
+            <div className='fav_iconIhe'>
            <label className="like">
            <input type="checkbox" checked={isSaved} onClick={handleSavedPost}/>
            <div className="hearth"/>
          </label>
         </div>
-         )}
-        {userid === userId && (
+         ): (
          <div>
          <div
            className="context-menu"

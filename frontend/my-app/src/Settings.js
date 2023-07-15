@@ -4,6 +4,18 @@ import './style/settings.css'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import subscriptionOptions from './setari/subscriptionData';
+import IconButton from '@mui/material/IconButton';
+import { amber, purple } from '@mui/material/colors';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import { Document, Page, Text, View, StyleSheet ,pdf} from '@react-pdf/renderer';
+import { Image } from '@react-pdf/renderer';
+import logo from './media/Amzing_logo.png'
+import thankyouImage from './media/tha.png'
+
+const userID_LOCAL = localStorage.getItem('userId');
+console.log("USER LOCAl",userID_LOCAL)
+
+
 
 function Settings(props) {
   const [toggleState, setToggleState] = useState(1);
@@ -20,11 +32,16 @@ function Settings(props) {
   const [pictureA, setPictureA] = useState('');
   const [bio, setBio] = useState("");
   const[ userType, setuserType] = useState("");
-
+  const [followers, setfollowers] = useState([]);
+  const [followings, setfollowings] = useState([]);
+  const [subscription, setsubscription] = useState(null);
+  const [subscriptionID, setsubscriptionID] = useState("");
   
   const toggleTab = (index) => {
     setToggleState(index);
   };
+
+
 
   const handlePictureChange = (event) => {
     const file = event.target.files[0];
@@ -45,7 +62,7 @@ function Settings(props) {
     props.setIsPopupOpenSub(true);
   };
 
-  console.log("here is ",pictureA)
+  console.log("here is ",subscription)
 
   useEffect(() => {
     if(userId){
@@ -61,11 +78,25 @@ function Settings(props) {
           setPassword(data.password)
           setphoneNumber(data.phoneNumber)
           setbirthday(data.birthday)
+          setuserType(data.userType)
+          setuserType(data.userType)
                   
         });
-    }
-    }, []);
 
+    }
+    
+    fetch(`http://localhost:7070/api/users/${userId}/subscription`)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(subscription)
+      setsubscription(data);
+      setsubscriptionID(data._id); 
+      
+      });
+    
+    }, []);
+    console.log("Ia sa vedem",subscriptionID)
+    console.log(subscription)
     const handleEdit = () => {
       setIsEditing(true);
 
@@ -97,6 +128,252 @@ function Settings(props) {
       setIsEditing(false);
     };
 
+    const handleCancelSubscription = async () => {
+      const subscriptionData = {
+        subscriptionType: subscription.subscriptionType,
+        startDate: subscription.startDate,
+        price: subscription.price,
+        userid: userID_LOCAL,
+        status: "Canceled",
+        nextBillingDate: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000)
+      };
+    
+      if (subscription) {
+        console.log("upgrade");
+        try {
+          const response = await axios.put(
+            `http://localhost:7070/api/subscription/${subscriptionID}`,
+            subscriptionData
+          );
+
+          window.location.href = `/settings`;
+          console.log(response);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    
+      let formData = new FormData();
+      formData.append("name", name);
+      formData.append("city", city);
+      formData.append("email", email);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("password", password);
+      formData.append("bio", bio);
+      formData.append("birthday", birthday);
+      formData.append("userType", 'Standard');
+      formData.append("imagePaths", pictureA);
+      console.log(pictureA);
+    
+      try {
+        const updateUserResponse = await axios.put(
+          `http://localhost:7070/api/users/${userID_LOCAL}`,
+          formData
+        );
+        window.location.href = `/settings`;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    
+
+    const hanndlePDF = async () => {
+      const styles = StyleSheet.create({
+        page: {
+          fontFamily: 'Helvetica',
+          fontSize: 11,
+          paddingTop: 30,
+          paddingLeft: 60,
+          paddingRight: 60,
+          lineHeight: 1.5,
+          flexDirection: 'column',
+        },
+        titleContainer: {
+          flexDirection: 'row',
+          borderBottom: 1,
+          borderBottomColor: '#112131',
+          borderBottomWidth: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 10,
+        },
+        reportTitle: {
+          fontSize: 20,
+          textAlign: 'center',
+          fontWeight: 'bold',
+          color: 'purple', // Set the color to purple
+        },
+        invoiceNoContainer: {
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          marginTop: 10,
+          marginBottom: 5,
+        },
+        invoiceDateContainer: {
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+        },
+        invoiceDate: {
+          fontSize: 12,
+          fontWeight: 'bold',
+          color: 'purple', // Set the color to purple
+        },
+        label: {
+          width: 60,
+        },
+        headerContainer: {
+          marginTop: 20,
+        },
+        billTo: {
+          marginTop: 20,
+          paddingBottom: 5,
+          fontFamily: 'Helvetica-Oblique',
+          color: 'purple', // Set the color to purple
+        },
+        details: {
+          marginTop: 20,
+          paddingBottom: 5,
+        },
+        tableContainer: {
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          marginTop: 36,
+          borderWidth: 1,
+          borderColor: '#112131',
+          borderRadius: 5,
+        },
+        tableHeaderContainer: {
+          flexDirection: 'row',
+          borderBottomColor: '#112131',
+          backgroundColor: '#f0f0f0',
+          borderBottomWidth: 1,
+          alignItems: 'center',
+          height: 24,
+          textAlign: 'center',
+          fontStyle: 'bold',
+          flexGrow: 1,
+          fontSize: 12,
+        },
+        tableHeader: {
+          width: '33%',
+        },
+        tableRow: {
+          flexDirection: 'row',
+          borderBottomColor: '#112131',
+          borderBottomWidth: 1,
+          alignItems: 'center',
+          height: 24,
+          textAlign: 'center',
+          flexGrow: 1,
+          fontSize: 10,
+        },
+        description: {
+          width: '33%',
+        },
+        rate: {
+          width: '33%',
+        },
+        totalsContainer: {
+          marginTop: 30,
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+        },
+        totalsBox: {
+          width: 150,
+          lineHeight: 2,
+          marginLeft: 20,
+          textAlign: 'right',
+        },
+        grandTotalBox: {
+          width: 150,
+          lineHeight: 2,
+          textAlign: 'right',
+        },
+        termsContainer: {
+          marginTop: 30,
+        },
+        termsTitle: {
+          marginBottom: 5,
+          fontWeight: 'bold',
+        },
+        logo: {
+          width: 100,
+          height: 150,
+        },
+        thankyouImage: {
+          width: '100%',
+          height: '100%',
+        },
+        pageBreak: {
+          pageBreakAfter: 'always',
+        },
+      });
+    
+      const MyDocument = () => (
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.reportTitle}>Invoice</Text>
+            </View>
+    
+            <Image src={logo} style={styles.logo} />
+    
+            <View style={styles.invoiceNoContainer}>
+              <Text>Invoice No: </Text>
+              <Text>{Math.floor(Math.random() * 100000)}</Text>
+            </View>
+    
+            <View style={styles.invoiceDateContainer}>
+              <Text style={styles.invoiceDate}>
+                Invoice Date: {new Date(subscription.startDate).toLocaleDateString('en-GB')}
+              </Text>
+            </View>
+    
+            <View style={styles.headerContainer}>
+              <Text style={styles.billTo}>Bill To:</Text>
+              <Text style={styles.details}>{user.name}</Text>
+              <Text style={styles.details}>{user.email}</Text>
+              <Text style={styles.details}>{user.phoneNumber}</Text>
+              <Text style={styles.details}>{user.city}</Text>
+            </View>
+    
+            <View style={styles.tableContainer}>
+              <View style={styles.tableHeaderContainer}>
+                <Text style={styles.tableHeader}>Description</Text>
+                <Text style={styles.tableHeader}>Price</Text>
+                <Text style={styles.tableHeader}>Next Billing Date</Text>
+              </View>
+    
+              <View style={styles.tableRow}>
+                <Text style={styles.description}>{subscription.subscriptionType}</Text>
+                <Text style={styles.rate}>{subscription.price}</Text>
+                <Text style={styles.description}>
+                  {new Date(subscription.nextBillingDate).toLocaleDateString('en-GB')}
+                </Text>
+              </View>
+            </View>
+    
+            <View style={styles.totalsContainer}>
+              <View style={styles.totalsBox}>
+                <Text>Total:</Text>
+              </View>
+              <View style={styles.totalsBox}>
+                <Text>{subscription.price} RON</Text>
+              </View>
+            </View>
+    
+            <View style={styles.pageBreak} />
+            <Image src={thankyouImage} style={styles.thankyouImage} />
+          </Page>
+        </Document>
+      );
+    
+      const blob = await pdf(<MyDocument />).toBlob();
+      const url = URL.createObjectURL(blob);
+      window.open(url);
+    };
+    
+
   return (
     <div className="settings">
       <div className="bloc-tabs">
@@ -104,25 +381,25 @@ function Settings(props) {
           className={toggleState === 1 ? "tabs active-tabs" : "tabs"}
           onClick={() => toggleTab(1)}
         >
-          Account
+         <p id='p_tab'>Account</p> 
         </button>
         <button
           className={toggleState === 2 ? "tabs active-tabs" : "tabs"}
           onClick={() => toggleTab(2)}
         >
-          Password & Security
+          <p id='p_tab'>Password & Security</p>
         </button>
         <button
           className={toggleState === 3 ? "tabs active-tabs" : "tabs"}
           onClick={() => toggleTab(3)}
         >
-         Manage Subscription
+        <p id='p_tab'>Manage Subscription</p> 
         </button>
         <button
           className={toggleState === 4 ? "tabs active-tabs" : "tabs"}
           onClick={() => toggleTab(4)}
         >
-          Notifications
+         <p id='p_tab'>Notifications</p> 
         </button>
       </div>
 
@@ -215,7 +492,6 @@ function Settings(props) {
            <div className='subscriptions'>
           {user && user.userType === 'Standard' && ( 
             <div>
-           <h1>Subscriptions : {user.userType}</h1>
            <div className="subscriptions_">
             {subscriptionOptions.map((option) => {
               if (option.type === user.userType) {
@@ -229,7 +505,13 @@ function Settings(props) {
                         <li key={index}>{benefit}</li>
                       ))}
                     </ul>
-                    <button onClick={handleSubscriptions}>Upgrade Subscription</button>
+                    <button class="button_sub" onClick={handleSubscriptions}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                        <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                    </svg>
+                    Upgrade Subscription
+                </button>
+                   
                   </div>
                 );
               }
@@ -240,7 +522,7 @@ function Settings(props) {
           </div>)}
           {user && user.userType === 'Premium' && ( 
                       <div>
-           <h1>Subscriptions : {user.userType}</h1>
+
            <div className="subscriptions_">
             {subscriptionOptions.map((option) => {
               if (option.type === user.userType) {
@@ -256,7 +538,7 @@ function Settings(props) {
                         <li key={index}>{benefit}</li>
                       ))}
                     </ul>
-                    <button>Cancel subscription</button>
+                    <button onClick={handleCancelSubscription} >Cancel subscription</button>
                   </div>
                   
                 );
@@ -268,7 +550,7 @@ function Settings(props) {
           </div>)}
           {user && user.userType === 'Vet' && ( 
                      <div>
-           <h1>Subscriptions : {user.userType}</h1>
+
            <div className="subscriptions_">
             {subscriptionOptions.map((option) => {
               if (option.type === user.userType) {
@@ -284,7 +566,8 @@ function Settings(props) {
                         <li key={index}>{benefit}</li>
                       ))}
                     </ul>
-                    <button>Cancel subscription</button>
+                    
+                    <button onClick={handleCancelSubscription}>Cancel subscription</button>
                   </div>
                 );
               }
@@ -293,14 +576,26 @@ function Settings(props) {
           </div>
 
           </div>)}
-          <button>View All Subscriptions</button>
+         {/**<button>View All Subscriptions</button> */} 
           </div>
           
         </div>
-        <div className='payment_div'>
-            
+       
+          {subscription && (
+           <div className='payment_div'>
+            <h2>Last subscription details</h2>
+              <p>Subscription Type : {subscription.subscriptionType}</p>
+              <p>Start Date : {new Date(subscription.startDate).toLocaleDateString("en-GB")}</p>
+              <p>Price : {subscription.price}</p>
+              <p>Status : {subscription.status}</p>
+              <p>Next Billing Date : {new Date(subscription.nextBillingDate).toLocaleDateString("en-GB")}</p>
+              <IconButton aria-label="edit" color="secondary" sx={{ color: purple[500] }} onClick={hanndlePDF}> 
+                  <InsertDriveFileIcon fontSize="large"  />
+                </IconButton>
+            </div>)}
+           
         </div>
-        </div>
+       
         <div
           className={toggleState === 4 ? "content-set  active-content" : "content-set"}
         >

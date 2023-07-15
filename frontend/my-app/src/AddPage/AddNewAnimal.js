@@ -8,7 +8,6 @@ import axios from 'axios';
 const userId = localStorage.getItem('userId');
 
 function AddNewAnimal() {
-
   const [pictureSrc, setPictureSrc] = useState('');
   const [name,setName] = useState('');
   const [species,setSpecies] = useState('');
@@ -17,7 +16,7 @@ function AddNewAnimal() {
   const [weight,setWeight] = useState('');
   const [picture,setPicture] = useState('');
   const [birthday, setBirthday] = useState("");
-  const [sterilizer, setSterilizer] = useState("");
+  const [sterilizer, setSterilizer] = useState("Da");
 
   const handlePictureChange = (event) => {
     const file = event.target.files[0];
@@ -61,8 +60,6 @@ function AddNewAnimal() {
       
     }
   };
-
-
           const handleCancel = async (event) => {
             event.preventDefault();
             window.location.href = '/myAnimals' ;

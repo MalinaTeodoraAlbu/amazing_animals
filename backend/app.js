@@ -7,7 +7,8 @@ const postRouter = require("./routers/postRouter");
 const animalRouter = require("./routers/animalRouter");
 const conversationsRouter = require("./routers/conversationsRouter");
 const messagesRouters = require("./routers/messagesRouter");
-const subscribe = require('./routers/subscribe')
+const subscribe = require('./routers/subscribe');
+const advertisingRouter = require("./routers/advertisingRouter");
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(cors());
 
 app.use("/api", mainRouter);
 app.use("/api", userRouter);
+app.use("/api", advertisingRouter);
 app.use("/api", postRouter);
 app.use("/api", animalRouter);
 app.use("/api/conversation", conversationsRouter);

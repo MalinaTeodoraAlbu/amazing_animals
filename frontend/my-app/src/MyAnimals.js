@@ -5,9 +5,14 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import AnimalProfile from "./function/AnimalProfile";
 import MedicalRecordsList from "./function/MedicalRecordsList";
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import ArticleIcon from '@mui/icons-material/Article';
 import { jsPDF } from "jspdf";
-
+import { IconButton } from '@mui/material';
+import { amber } from '@mui/material/colors';
+import AddIcon from '@mui/icons-material/Add';
 import imgData from './media/Amzing_logo.png';
+import Vet from "./function/Vet";
 
 function MyAnimals() {
   const userId = localStorage.getItem('userId');
@@ -15,7 +20,8 @@ function MyAnimals() {
   const [animals, setAnimals] = useState([]);
   const [medicalRecords, setMedicalRecords] = useState([]);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
-
+  const [clients, setClients] = useState([])
+  const picture = animals ? `http://localhost:7070/${animals.imagePaths}` : '';
   
 
   useEffect(() => {
@@ -27,6 +33,17 @@ function MyAnimals() {
       .then(res => setAnimals(res.data))
       .catch(err => console.error(err));
       
+  }, []);
+
+
+  
+  useEffect(() => {
+    if(user && user.userType === 'Vet'){
+      axios.get(`http://localhost:7070/api/pacients/${userId}`)
+      .then(res => setClients(res.data))
+      .catch(err => console.error(err));
+    }
+
   }, []);
 
   const handleAnimalClick = (animalID) => {
@@ -247,77 +264,91 @@ function MyAnimals() {
   
   return (
     <div className="Animals_container">
+{user && user.userType !=='Vet' ? (
+  <>
+   <div className="list_of_animals">
+   <div className="Animals_details_container_border">
+     <h3>My animals</h3>
+     <div className="button_container">
+       <IconButton  onClick={addAnimal} disableRipple>
+            <AddIcon fontSize="small" sx={{ color: amber[50] }} />
+          </IconButton>
+     </div>
+   </div>
+   <div className="list_of_animals_">
+           {animals.map(animal => (
+         <img key={animal._id} src={`http://localhost:7070/${animal.imagePaths}`} alt={animal.name} className="animal_photo" onClick={() => handleAnimalClick(animal._id)} />
+         ))}</div>
+     </div>
+             <AnimalProfile selectedAnimal = {selectedAnimal}></AnimalProfile>
 
-    <div className="list_of_animals">
-    <div className="Animals_details_container_border">
-      <h3>My animals</h3>
-      <div className="button_container">
-        <button className="add_new_animal" onClick={addAnimal}>Add New Animal</button>
-        
-      </div>
-    </div>
-    <div className="list_of_animals_">
-            {animals.map(animal => (
-          <img key={animal._id} src={animal.picture} alt={animal.name} className="animal_photo" onClick={() => handleAnimalClick(animal._id)} />
-          ))}</div>
-      
-      </div>
 
-              <AnimalProfile selectedAnimal = {selectedAnimal}></AnimalProfile>
-      {selectedAnimal ? (
-         <div className="medical_details"> 
-         <div className="medical_details_container"> 
-         <div className="Animals_details_container_border">
-      <h3>Medical Records</h3>
-      <div className="button_container">
-      <button  onClick={generateReport}>Generate Report</button>
-        <button onClick={addNewMedicalRecord}>Add </button>
-        
-      </div>
-    </div> 
-
-            <div className="records_container">
-            <MedicalRecordsList medicalRecords={medicalRecords} />
-            </div>
-            </div>
-         <div className="medical_details_container_remind"> 
-         <div className="Animals_details_container_border">
-              <h3>Remind</h3>
-            </div>
-              <div className="records_container" >
-              <MedicalRecordsList medicalRecords={medicalRecords.filter(record => record.repeat)} />
-
-             </div>
-         </div>
-       </div>
-
-      ):(
+     {selectedAnimal ? (
         <div className="medical_details"> 
-         <div className="medical_details_container"> 
-         <div className="Animals_details_container_border">
-      <h3>Medical Records</h3>
+        <div className="medical_details_container"> 
+        <div className="Animals_details_container_border">
+     <h3>Medical Records</h3>
+     <div className="button_container">
+     <IconButton  onClick={generateReport} disableRipple>
+            <ArticleIcon fontSize="small" sx={{ color: amber[50] }} />
+          </IconButton>
+     <IconButton  onClick={addNewMedicalRecord} disableRipple>
+            <AddIcon fontSize="small" sx={{ color: amber[50] }} />
+          </IconButton>
       
-      <div className="button_container">
-     
+     </div>
+    
+   </div> 
+
+           <div className="records_container">
+           <MedicalRecordsList medicalRecords={medicalRecords} />
+           </div>
+           </div>
+        <div className="medical_details_container_remind"> 
+        <div className="Animals_details_container_border">
+             <h3>Remind</h3>
+           </div>
+             <div className="records_container" >
+             <MedicalRecordsList medicalRecords={medicalRecords.filter(record => record.repeat)} />
+
+            </div>
+        </div>
       </div>
-    </div> 
 
-            <div className="records_container">
-            <h3>0 medical records</h3>
-            </div>
-            </div>
-         <div className="medical_details_container_remind"> 
-         <div className="Animals_details_container_border">
-              <h3>Remind</h3>
-            </div>
-              <div className="records_container" >
-             </div>
-         </div>
-       </div>
+     ):(
+       <div className="medical_details"> 
+        <div className="medical_details_container"> 
+        
+        <div className="Animals_details_container_border">
+     <h3>Medical Records</h3>
+     
+     <div className="button_container">
+    
+     </div>
+   </div> 
 
- 
-      )}
+           <div className="records_container">
+           <h3>0 medical records</h3>
+           </div>
+           </div>
+        <div className="medical_details_container_remind"> 
+        <div className="Animals_details_container_border">
+             <h3>Remind</h3>
+           </div>
+             <div className="records_container" >
+            </div>
+        </div>
+      </div>
 
+
+     )}
+</>
+) : (
+  <div >
+   <Vet></Vet>
+  </div>
+)}
+   
          </div>
  
   );

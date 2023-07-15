@@ -8,7 +8,7 @@ import axios from 'axios';
 function AddNewPost() {
   const userId = localStorage.getItem("userId");
   const [animals, setAnimals] = useState([]);
-  const [animalId, setAnimalId] = useState(null);
+  const [animalId, setAnimalId] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
   const [tag, setTag] = useState("");
@@ -23,12 +23,15 @@ function AddNewPost() {
   const [location, setLocation] = useState("");
   const [saveAnimal, setSaveAnimal] = useState("");
   const [sterilizer, setSterilizer] = useState(false);
+  
   const [currentSection, setCurrentSection] = useState('section-1');
   const [isArrowRotated, setIsArrowRotated] = useState(false);
   const toggleSection = () => {
     setCurrentSection(currentSection === 'section-1' ? 'section-2' : 'section-1');
     setIsArrowRotated(!isArrowRotated);
   };
+
+ 
 
   useEffect(() => {
     if (animalId != null) {
@@ -41,10 +44,8 @@ function AddNewPost() {
           setSex(animalData.sex);
           setColor(animalData.color);
           setWeight(animalData.weight);
-          setPictureSrc(animalData.imagePaths);
-          setBirthday(animalData.birthday);
+          setBirthday(new Date(animalData.birthday).toISOString().split("T")[0]);
           setSterilizer(animalData.sterilizer);
-          setLocation(animalData.location);
         })
         .catch((err) => console.error(err));
     }
@@ -75,84 +76,72 @@ function AddNewPost() {
   
 const handleSubmit = async (event) => {
   event.preventDefault();
-
+  
   const formData = new FormData();
   formData.append('userid', userId);
   formData.append('content', content);
   formData.append('location', location);
   formData.append('category', category);
   formData.append('tag', tag);
+  if (pictureSrc) {
+    formData.append('imagePaths', pictureSrc);
+
+  }
+  if(category=== 'Lovely'){
+    try {
+      const res = await axios.post(`http://localhost:7070/api/posts`, formData, {
+      });
+      if(res.status === 200){
+        window.location.href = `/feed`;
+      }
+    } catch (error) {
+      console.error(error);
+    toast.error('Internal server error', {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000,
+      style: {
+        marginTop: '5rem'
+      }
+    });
+    }
+  }
+  else {
+
+    
   formData.append('name', name);
   formData.append('species', species);
-  formData.append('imagePaths', pictureSrc);
   formData.append('color', color);
   formData.append('sex', sex);
-  formData.append('weight', weight);
-  formData.append('birthday', birthday);
+  formData.append('weight',  parseFloat(weight));
+  formData.append('birthday', new Date(birthday));
   formData.append('sterilizer', sterilizer);
   try {
-    if (category === 'Lovely') {
+      console.log('in try catch',[...formData]); 
       const res = await axios.post(`http://localhost:7070/api/posts`, formData, {
-        
       });
 
+        const formDataAnimal = new FormData();
+        formDataAnimal.append('userid', userId);
+        formDataAnimal.append('name', name);
+        formDataAnimal.append('species', species);
+        formDataAnimal.append('sex', sex);
+        formDataAnimal.append('color', color);
+        formDataAnimal.append('weight', weight);
+        formDataAnimal.append('birthday', birthday);
+        formDataAnimal.append('sterilizer', sterilizer);
+        console.log('before Animals',[...formDataAnimal]); 
+        if (pictureSrc) {
+          formDataAnimal.append('imagePaths', pictureSrc);
+        }
+        if (saveAnimal === true) {
+          const animalRes = await axios.post(`http://localhost:7070/api/animal`, formDataAnimal);
+        }
+     
       if(res.status === 200){
         window.location.href = `/feed`;
       }
       
-    } else {
-      const animalData = {
-        name,
-        species,
-        color,
-        sex,
-        location,
-        weight,
-        picture: picture,
-        birthday,
-        sterilizer
-      };
 
-      if (saveAnimal === true) {
-        const animalRes = await axios.post(`http://localhost:7070/api/animals/${userId}`, animalData);
-
-        if (animalRes.status !== 200) {
-          toast.error('Internal server error', {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-            style: {
-              marginTop: '5rem'
-            }
-          });
-          return;
-        }
-      }
-
-      const postRes = await axios.post(`http://localhost:7070/api/posts`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      if (postRes.status === 200) {
-        toast.success('Succesfully!', {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1000,
-          style: {
-            marginTop: '5rem'
-          }
-        });
-        window.location.href = '/feed';
-      } else {
-        toast.error('Internal server error', {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          style: {
-            marginTop: '5rem'
-          }
-        });
-      }
-    }
   } catch (error) {
     console.error(error);
     toast.error('Internal server error', {
@@ -163,13 +152,16 @@ const handleSubmit = async (event) => {
       }
     });
   }
+  
+  }
+
+
 };
 
   
     return (
    
       <div className="add-new-post">
-       <ToastContainer />
 
        <div className="add-new-post-picture-side">
        <label htmlFor="picture">Picture:</label>
@@ -235,8 +227,8 @@ const handleSubmit = async (event) => {
     <section id="section-2" style={{ display: currentSection === 'section-2' ? 'block' : 'none' }}>
     <div className="add-new-post-picture-side">
             <h3>Animal Details</h3>
-            <label>Do you want to take the details for an existing animal?:</label>
-          <select value={animalId} onChange={(e) => setAnimalId(e.target.value)}>
+            <label>Do you want to take the details for an existing animal?</label>
+          <select value={animalId || ''} onChange={(e) => setAnimalId(e.target.value)}>
           <option value="-">-</option>
           {animals.map(animal => (
             <option key={animal._id} value={animal._id}>{animal.name}</option>
@@ -262,7 +254,7 @@ const handleSubmit = async (event) => {
             </div>
             <div className="form-control">
               <label>Sex</label>
-              <select value={sex} onChange={(e) => setSex(e.target.value)}>
+              <select value={sex || '' } onChange={(e) => setSex(e.target.value)}>
                 <option value="">Select Sex</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -326,6 +318,7 @@ const handleSubmit = async (event) => {
     <div className="s_round" onClick={handleSubmit} >
   <div className="s_submit"></div>
 </div>
+
   </div>
     </section>
     

@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,100&display=swap');
+
+
 * {
   font-family: 'Lato', sans-serif;
   margin: 0;
@@ -14,8 +17,10 @@
   margin-right: 10%;
   font-size: 115%;
   font-weight: bold;
-
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
+  
+ 
 }
 
 /* Header*/
@@ -33,7 +38,7 @@
 }
 
 .user_info {
-margin-left: 50%;
+margin-left: 20%;
   display:inline-flex;
   margin-right: 5%;
  align-items: center;
@@ -52,12 +57,16 @@ margin-left: 50%;
 .user_info button {
   font-family: 'Lato', sans-serif;
   border: none;
-  color: #fff;
-  background-color: #645CBB;
+ 
+  background-color: transparent;
   font-weight: bold;
   cursor: pointer;
   font-size: 115%;
   margin-right: 20px;
+}
+
+.button_logout{
+  color: white;
 }
 
 .user_info button:hover{
@@ -100,6 +109,10 @@ margin-left: 50%;
 
 .user-info_b p {
   color: #FFFFFF;
+  min-width: 130px;
+  max-width: 150px;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .content {
@@ -171,7 +184,7 @@ body {
 }
 
 .icon::before {
-  top: 12px;
+  top: 10px;
 }
 
 .icon::after {
@@ -280,11 +293,12 @@ li:hover a i::after {
   margin-bottom: 5%;
   border-radius: 20px;
   position: relative;
+  box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
 }
 
 .input_container {
   display: flex;
-  width: 100%;
+  width: 98%;
   align-items: center;
 }
 
@@ -294,6 +308,7 @@ li:hover a i::after {
   padding: 10px;
   border: none;
   margin-top: 1%;
+  
 }
 
 .post_input:focus {
@@ -315,6 +330,7 @@ li:hover a i::after {
   position: absolute;
   bottom: 20%;
   right: 5%;
+  
 }
 
 .buttons_feed button {
@@ -324,6 +340,7 @@ li:hover a i::after {
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
+  box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
 }
 
 .add-animal-btn {
@@ -356,29 +373,36 @@ li:hover a i::after {
   height: 70%;
   border-radius: 20px;
   width: 100%;
+  box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
 }
 
 
-.Feed_ADv ._border_adv{
+._border_adv {
   background-color: #645CBB;
   float: right;
   height: 8%;
   width: 100%;
-  border-radius: 20px  20px 0 0 ;
-  margin-left: 1%;  
+  border-radius: 20px 20px 0 0;
+  margin-left: 1%;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
 }
-
-
 
 ._border_adv h3 {
-  font-size: 120%; 
-  width: 100%;
-  height: 100%;
-  color: #FFFFFF; 
-  margin: 0; 
-  padding: 10px; 
+  font-size: 120%;
+  margin-right: 50px;
+  color: #FFFFFF;
+  margin: 0;
+  padding: 10px;
 }
 
+._border_adv button {
+  margin-right: 40px;
+  right: 0;
+  float: right;
+  left: 100px;
+}
 
 
 /*POSTS*/
@@ -391,10 +415,12 @@ li:hover a i::after {
 	box-shadow: 0 5px 10px 0 rgba(#000, .15);
 	border-radius: 20px;
   margin-bottom: 7%;
+  box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
 }
 
 .userid .Animals_details_container_border{
 width: 100%;
+
 }
 
 ._border_{
@@ -407,6 +433,7 @@ width: 100%;
   width: 7%;
   margin: 1%;
   border-radius: 50%;
+  box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
 }
 
 .user-info_b {
@@ -523,6 +550,7 @@ width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 20px 14px 0 rgba(0,0,0,0.2);
 }
 
 .category_ p {
@@ -586,13 +614,23 @@ h6 {
   position: absolute;
   overflow-x:scroll;
   height: 100%;
-  width: 100%;
+  width: 98%;
+  min-height: 500px;
   margin-left: 8%;
 }
 
 .ListOfFavourites_container{
   height: 100%;
-  width: 87%;
+  min-height: 500px;
+  width: 90%;
+  
+}
+
+.comm_time{
+  
+  position: sticky;
+
+  width: 100px;
 }
 
 .ListOfFavourites_search{
@@ -601,16 +639,20 @@ h6 {
   width: 100%;
   border-radius: 20px 20px 20px 20px ;
   margin-bottom: 2%;
+  box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
 }
+
+
 
 .ListOfFavourites_{
   background-color: white;
   width: 100%;
-  height: 500px;
-  margin-left: 10px;
-  border-radius: 20px 0 0 20px;
+  max-height: 600px;
+  min-height: 580px;
+  border-radius: 20px ;
   overflow-y: auto;
   bottom: 0;
+  box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
 }
 
 .savedPost_post{
@@ -621,7 +663,7 @@ h6 {
   width: 30%; 
   height: 380px; 
   padding: 20px; 
-
+  box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
 }
 
 .border_fav_white{
@@ -636,8 +678,14 @@ h6 {
 .img_fav_purple{
   height: 80%;
   width: 100%;
-  border-radius: 0 0 20px 20px  ;
+  border-radius: 0 0 20px 20px;
   background-color: #a1a1a1;
+}
+
+.img_fav_purple img{
+
+  border-radius: 0 0 20px 20px;
+
 }
 
 .border_fav_white input{
@@ -646,14 +694,11 @@ display: none;
 
 /*fav icon*/
 
-.fav_iconIhe{
-  float: right;
-  margin-left: 520px;
+.user-info_b .fav_iconIhe{
   margin-bottom: 1.5%;
   background-color: #ffffff;
   border-radius: 50%;
-  margin: 0 10px;
-  
+  margin-left: 580px;
 }
 
 .img_fav_purple img{
@@ -702,6 +747,25 @@ height: 100%;
   margin-bottom: 4%;
 }
 
+.follower {
+display: flex;
+margin-bottom: 20px;
+padding: 20px;
+}
+
+.follower p{
+margin-left: 20px;
+margin-top: 25px;
+}
+
+.follower img{
+max-width: 80px;
+max-height: 80px;
+min-width: 80px;
+min-height: 80px;
+border-radius: 50%;
+}
+
 .list_of_animals .Animals_details_container_border{
   height: 30%;
   font-size: 100%; 
@@ -715,13 +779,7 @@ height: 100%;
 .list_of_animals .Animals_details_container_border .button_container {
   text-align: right;
   margin-right: 3%;
-  
   }
-
-.list_of_animals .Animals_details_container_border .button_container  button{
-  
-
-}
 
 .list_of_animals_{
   background-color: white;
@@ -735,7 +793,7 @@ height: 100%;
 
 .Animals_profile_container {
   display: flex;
-  min-height: 40%;
+  min-height: 60%;
   min-width: 100%;
   height: 40%;
   width: 100%; 
@@ -744,25 +802,29 @@ height: 100%;
   margin-right: 1%; 
 }
 
+.Animals_profile_container .Animals_details_container_border{
+  height: 45px;
+}
+
 
 .list_of_animals .Animals_details_container_border{
-   height: 40%;
+   height: 45px;
 }
+
 .Animals_photo_container {
   background-color: white;
   float: left;
   height: 100%;
-  width: 20%;
+  width: 25%;
   border-radius: 20%;
- 
 }
 
 
 
 .Animals_details_container_{
   float: right;
-  height: 100%;
-  width: 75%;
+  height: 400px;
+  width: 70%;
   border-radius: 20px;
   margin-left: 1%;  
 }
@@ -776,6 +838,29 @@ height: 100%;
   margin-left: 1%;  
 }
 
+.buttons_friends button{
+  width: 340px;
+  border-radius: 20px;
+  margin-left: 30px;
+  margin-right: 20px;
+  height: 50px;
+  border: none;
+  color: white;
+  background-color: #9d5cbb;
+}
+
+.buttons_friends .active-button {
+  background-color: #7b73b9;
+  color: #fff;
+}
+
+
+.buttons_friends button:hover{
+  background-color: #645CBB;
+}
+.hader_pop_fol_buttons{
+  margin-left: 750px;
+}
 .Animals_details_container_border{
   background-color: #645CBB;
   height: 20%;
@@ -788,19 +873,18 @@ height: 100%;
 
 }
 
-.Animals_details_container_ .Animals_details_container_border button{
+.Animals_details_container h2{
+padding: 5px;
+}
 
+.Animals_details_container_ .Animals_details_container_border button{
   right: 0;
   width: 10%;
-  margin-top: 1.5%;
   margin-right: 2%;
-  background-color: #481e94;
+  margin-left: 290px;
   border: none;
   color: white;
-  padding: 5px 20px;
-  text-align: center;
-  display: inline-block;
-  font-size: 16px;
+
   cursor: pointer;
   border-radius: 4px;
 }
@@ -843,7 +927,7 @@ font-size: 100%;
 }
 
 .medical_details_container .Animals_details_container_border .button_container  button{
-  background-color: #481e94;
+
   border: none;
   color: white;
   margin-right: 20px;
@@ -887,11 +971,73 @@ font-size: 100%;
 }
 
 .medical_records_list {
+  overflow: scroll;
   display: flex;
   flex-wrap: wrap;
+  height: 380px;
+}
+
+.ListOfAllUser{
+  overflow-x: hidden;
+  overflow-y: scroll;
+  margin-top: 20px;
+  margin-left: 20px;
+  width: 95%;
+  height: 400px;
+  border-radius: 20px;
+  border: 1px solid ;
+  box-shadow: 0 0 5px #888;
+}
+
+.addNewClint{
+  width: 75%;
+  background-color: white;
+  height: 600px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.adduserprofile{
+  margin-left: 20px;
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.addNewClint img{
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.addNewClint input {
+  width: 95%;
+  height: 50px;
+  margin-left: 20px;
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.addNewClint input:focus {
+  outline: none;
+  border-color: #888;
+  box-shadow: 0 0 5px #888;
+}
+
+.div_client_add_p{
+  display: flex;
+  width: 80%;
+  margin-left: 20px;
+}
+.adduserprofile p{
+  margin-top: 20px;
+  
 }
 
 .record {
+  overflow-y: scroll;
   margin-bottom: 5px;
   font-size: 120%;
   font-family: 'Lato', sans-serif;
@@ -905,11 +1051,137 @@ font-size: 100%;
   margin-top: 3%; 
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
-  min-width: 400px;
-  max-height: 120px;
+  min-width: 500px;
+  min-height: 200px;
+  max-height: 200px;
+  
 }
 
 
+.record input{
+display: block;
+width: 100%;
+border: none;
+margin-top: 20px;
+}
+.medical_records_list button{
+float: right;
+position: sticky;
+margin-left: 280px;
+margin-top: 10px;
+}
+.Vet_container{
+  display: flex;
+  width: 95%;
+  height: 600px;
+  
+}
+
+.border_vet{
+  width: 100%;
+  background-color: #645CBB;
+  height: 45px;
+  border-radius: 20px 20px 0 0;
+}
+
+
+
+.border_vet h3{
+  color: white;
+  padding: 10px;
+}
+
+.Client_VET{
+  display: flex;
+  width: 90%;
+  background-color: #BFACE2;
+  height: 80px;
+  margin: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.Client_VET p{
+color: white;
+font-size: small;
+margin-left: 20px;
+margin-top: 30px;
+}
+.Client_VET img{
+width: 60px;
+height: 60px;
+margin-left: 10px;
+margin-top: 10px;
+border-radius: 50%;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+.list_of_clients_animals{
+  display: flex;
+  margin-top: 5px;
+}
+.Vet_container_clients{
+  width: 20%;
+  background-color: white;
+  height: 600px;
+  border-radius: 20px;
+  margin-right: 2%;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.list_of_clients_specifications p{
+color: #481e94;
+padding: 15px;
+}
+
+.Vet_container_clients_animals{
+  width: 78%;
+  height: 600px;
+}
+
+.border_vet{
+  display: flex;
+}
+
+.border_vet button{
+  margin-left: 150px;
+}
+.listofanimalsofclient{
+  width: 100%;
+  border-radius: 20px;
+  background-color: white;
+  height: 135px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 25px;
+}
+
+.listofanimalsofclient_side{
+  width: 100%;
+  border-radius: 20px;
+  display: flex;
+  height: 440px;
+}
+.animal_client_specification{
+  width: 40%;
+  border-radius: 20px;
+  background-color: white;
+  height: 440px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  margin-right: 2%;
+}
+
+
+.animal_client_medical_record{
+  width: 58%;
+  border-radius: 20px;
+  background-color: white;
+  height: 440px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 25px;
+}
+
+.animal_client_medical_record button{
+margin-left: 400px;
+}
 .record p {
   margin: 0;
   font-size: 16px;
@@ -937,18 +1209,20 @@ font-size: 100%;
 
 .medical_details_container_remind{
   background-color: white;
-  height: 95%;
+  height: 100%;
   width: 30%;
   border-radius: 20px;
 }
 
-.medical_details_container_remind .records_container{
-  margin-top: 10%;
-}
+
 
 .medical_details_container_remind .records_container .record{
   width: 90%;
   margin-top: 5%;
+}
+
+.medical_details_container_remind  .Animals_details_container_border{
+  min-height: 48px;
 }
 
 .animal_photo {
@@ -1480,6 +1754,7 @@ select option:checked {
 .add-new-post {
   position: fixed;
   overflow-y: auto;
+  overflow-x: hidden;
   width: 80%;
   display: flex;
   background-color: #fff;
@@ -1489,7 +1764,7 @@ select option:checked {
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  padding-bottom: 50px;
+  padding-bottom: 100px;
 }
 
 
@@ -1564,8 +1839,8 @@ select option:checked {
 }
 .r_wrap_{
   position: relative;
-  right: -22%;
-  bottom: 30px;
+  right: -110px;
+  bottom: 20px;
   
 }
 
@@ -1760,13 +2035,14 @@ select option:checked {
 
 .comment {
   display: flex;
-  min-height: 60px;
-  max-height: 70px;
+  min-height: 20px;
+  max-height: 85px;
   background-color: rgba(123, 115, 185, 0.2);
   margin-bottom: 20px;
   border-radius: 20px;
   width: 95%;
   margin-left: 2%;
+  box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
 }
 
 .comment-user {
@@ -1778,22 +2054,29 @@ select option:checked {
 .list_of_comments::-webkit-scrollbar {
   display: none;
 }
-
+.comment-time{
+  width: 120px;
+  margin-left: 5px;
+}
 .comment-text {
   font-size: 14px;
   margin-top: 2%;
   border-radius: 8px;
   flex-grow: 1;
   min-width: 700px;
-  min-height: 25px;
+  height: auto;
   width: 80%;
-  margin-left: -132px;
+  overflow-wrap: break-word;
+  max-width: 500px;
+  margin-left: -160px;
   margin-top: 40px;
   margin-bottom: 5%;
 }
 
 .user-info_comment p {
   margin-top: -30px;
+  
+  min-width: 150px;
 }
 
 .user-info_comment {
@@ -1803,6 +2086,8 @@ select option:checked {
 
 .profile-picture_user-img_comment {
   width: 40px;
+  max-width: 40px;
+  min-width: 40px;
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
@@ -1822,8 +2107,8 @@ select option:checked {
 }
 
 .add-comment-section {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 1px;
+  margin-bottom: 40px;
 }
 
 .list_of_comments {
@@ -1851,15 +2136,23 @@ select option:checked {
 
 .textarea_comment {
   min-width:750px;
+  border-radius: 20px;
+  width: 80%;
+  padding: 10px;
   margin-left: 20px;
 }
 
 .btn-primary {
   color: #fff;
-  background-color: #524a9d;
-  border-color: #524a9d;
-  margin-left: 2%;
+  width: 17%;
+  margin-right: 2%;
+  border-radius: 20px;
+  background-color: #7268b9;
+  border: none;
+  margin-left: 1%;
+  
 }
+
 
 .btn-primary:hover {
   background-color: #524a9d;
@@ -1894,6 +2187,7 @@ select option:checked {
   overflow-y: scroll;
   margin-top: 5%;
   margin-left: 10%;
+  
 }
 
 .post_view_container::-webkit-scrollbar {
@@ -1902,7 +2196,7 @@ select option:checked {
 
 
 .post_view_container .fav_iconIhe{
-margin-left: 660px;
+margin-left: 60%;
 }
 
 
@@ -1998,3 +2292,140 @@ margin-left: 660px;
 .user_edit_buttons button:last-child {
   margin-right: 0;
 }
+
+.comment-text-input{
+  margin-top: 5px;
+  
+  min-width: 600px;
+  min-height: 40px;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.container_adv{
+width: 100%;
+
+}
+
+.container_adv img{
+  width: 100%;
+  max-height: 350px;
+  }
+
+  .buttons{
+    width: 20px;
+    height: 20px;
+    }
+
+
+    .flip-card {
+
+      margin-left: 35px;
+      background-color: transparent;
+      width: 80%;
+      height: 350px;
+      perspective: 1000px;
+      font-family: sans-serif;
+    }
+    
+    .title {
+      font-size: 1.5em;
+      font-weight: 900;
+      text-align: center;
+      margin: 0;
+    }
+    
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+    
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    
+    .flip-card-front, .flip-card-back {
+      box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 1rem;
+    }
+    
+    .flip-card-front {
+      background: linear-gradient(120deg, bisque 60%, rgb(255, 231, 222) 88%,
+         rgb(255, 211, 195) 40%, rgba(255, 127, 80, 0.603) 48%);
+      color: coral;
+    }
+    
+    .flip-card-back {
+      background: linear-gradient(120deg, rgb(255, 174, 145) 30%, coral 88%,
+         bisque 40%, rgb(255, 185, 160) 78%);
+      color: white;
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-back p {
+      white-space: normal;
+      overflow-wrap: break-word;
+    }
+
+    .r_wrap__{
+      position: relative;
+      right: -50px;
+      bottom: -70px;
+      
+    }
+
+    .spatiu_Add{
+
+      width: 200px;
+      height: 100px;
+    }
+
+
+    *::-webkit-scrollbar {
+      width: 5px;
+      display: none;
+    }
+    
+    *::-webkit-scrollbar-track {
+      background-color: #f2f2f2;
+    }
+    
+    *::-webkit-scrollbar-thumb {
+      background-color: #645CBB;
+    }
+    
+    *::-webkit-scrollbar-thumb:hover {
+      background-color: #a1a1a1;
+    }
+
+
+
+    .editButtonContainer {
+      display: flex;
+      
+    }
+    
+    .editButton {
+   
+      margin-left:150px ;
+      padding: 5px 10px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      color: #333333;
+    }
+    
+    .new-notification {
+      background-color: red;
+    }
