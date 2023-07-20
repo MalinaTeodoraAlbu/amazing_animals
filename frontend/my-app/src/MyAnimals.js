@@ -13,6 +13,7 @@ import { amber } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
 import imgData from './media/Amzing_logo.png';
 import Vet from "./function/Vet";
+import Delete from '@mui/icons-material/Delete';
 
 function MyAnimals() {
   const userId = localStorage.getItem('userId');
@@ -67,6 +68,9 @@ function MyAnimals() {
     window.location.href = `/addNewMedicalRecord/${selectedAnimal._id}`;
   }
   
+ 
+
+
   const generateReport = () => {
     console.log("selected Animal", selectedAnimal.name);
     let doc = new jsPDF();
@@ -273,6 +277,7 @@ function MyAnimals() {
        <IconButton  onClick={addAnimal} disableRipple>
             <AddIcon fontSize="small" sx={{ color: amber[50] }} />
           </IconButton>
+          
      </div>
    </div>
    <div className="list_of_animals_">

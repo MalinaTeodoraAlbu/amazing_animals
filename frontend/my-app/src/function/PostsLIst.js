@@ -55,10 +55,14 @@ function PostsList() {
             )}
             {post.userid ? (
               <div className='post_content'>
-                <div className='photo_a'>
+                {post.category === "Looking for Animal" ? 
+                (<div> </div>) : (
+<div className='photo_a'>
                   <img src={`http://localhost:7070/${post.imagePaths}`}></img>
                   
                 </div>
+                )}
+                
                 <div className='post_content_details_'>
                   <div className='category_'>
                     <p>{post.category}</p>
@@ -67,9 +71,15 @@ function PostsList() {
               
                 <section id="section-1" style={{ display: !selectedPosts.get(post._id) ? 'block' : 'none' }} >
                   <div className='post_content_details'>
-                    <div className="form-control">
+                  {post.category === "Looking for Animal" ? 
+                (<div className="form-control">
+                <label className='descriere_post_'>{post.content}</label>
+              </div>) : (
+                  <div className="form-control">
                       <label className='descriere_post'>{post.content}</label>
                     </div>
+                )}
+                    
                     <div className="form-control">
                       <label>{post.tag}</label>
                   
@@ -98,10 +108,12 @@ function PostsList() {
                 
                 <section id="section-2" style={{ display: selectedPosts.get(post._id) ? 'block' : 'none' }} >
                     <div className='post_content_details'>
-                      <div className="form-control">
-                        <label>Name</label>
-                        <label>{post.name}</label>
-                      </div>
+                    {post.category === "Looking for Animal" ? 
+                (<div> </div>) : (<div className="form-control">
+                <label>Name</label>
+                <label>{post.name}</label>
+              </div>)}
+
                       <div className="form-control">
                       <label>Species</label>
                         <label>{post.species}</label>
@@ -114,30 +126,39 @@ function PostsList() {
                       <label className="label-color" >Color</label>
                         <label>{post.color}</label>
                       </div>
+                      {post.category === "Looking for Animal" ? 
+                (<div> </div>) : (
+                  <div className="form-control">
+                  <label>Birthday</label>
+                    <label>{new Date(post.birthday).toLocaleDateString()}</label>
+                  </div>
+                )}
+                     
                       <div className="form-control">
-                      <label>Birthday</label>
-                        <label>{new Date(post.birthday).toLocaleDateString()}</label>
-                      </div>
-                      <div className="form-control">
-                      <label>Sterilizer</label>
-                        <label>{post.sterilizer}</label>
+                      
+                       
                       </div>
                     </div>
 
                     
                   </section>
-                  <div className='r_wrap_post'>
-                    <div
-                      className="s_round_post"
-                      onClick={() => {
-                        setSelectedPostId(post._id);
-                        toggleSection(post._id);
-                      }}
-                    >
-                      <div className="s_arrow_post"></div>
-                    </div>
-                    
-                  </div>
+                  {post.category !=="Lovely" ? (
+                     <div className='r_wrap_post'>
+                     <div
+                       className="s_round_post"
+                       onClick={() => {
+                         setSelectedPostId(post._id);
+                         toggleSection(post._id);
+                       }}
+                     >
+                       <div className="s_arrow_post"></div>
+                     </div>
+                     
+                   </div>
+                  ) : (
+<></>
+                  )}
+                 
             
               </div>
               
@@ -265,10 +286,10 @@ function User({ userid, postID }) {
          {showContextMenu && (
            <div className="context-menu-options">
            
-             <IconButton aria-label="delete" color="secondary" onClick={() => handleDelete(post._id)}>
+             <IconButton aria-label="delete" color="secondary" onClick={() => handleDelete(post._id)} disableRipple>
               <DeleteIcon className="DeleteIcon" fontSize="small"  style={{ position: 'relative', top: '50px' }} />
             </IconButton>
-            <IconButton aria-label="edit" color="primary" onClick={() => handleEdit(post._id)}  style={{ position: 'relative' }}>
+            <IconButton aria-label="edit" color="primary" onClick={() => handleEdit(post._id)}  style={{ position: 'relative' }} disableRipple>
               <EditIcon fontSize="small"  />
             </IconButton>
            </div>

@@ -313,15 +313,7 @@ function EditPost() {
                   onChange={(e) => setWeight(e.target.value)}
                 />
               </div>
-              <div className="form-control">
-                <label>Sterilizer</label>
-                <input
-                  type="checkbox"
-                  id='checkbox_form'
-                  checked={sterilizer}
-                  onChange={(e) => setSterilizer(e.target.checked)}
-                />
-              </div>
+             
              
             </div>
   

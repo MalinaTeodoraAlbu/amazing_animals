@@ -118,7 +118,8 @@
 }
 .div_elem_user_search{
 width: 680px;
-height: 90px;
+height: 100px;
+overflow-y: scroll;
 border-radius: 20px;
 background-color:white;
 margin-left: 20px;
@@ -128,6 +129,10 @@ display: flex;
 
 .div_elem_user_search img{
   width: 70px;
+  max-width: 70px;
+  min-width: 70px;
+  max-height: 70px;
+  min-height: 70px;
   height: 70px;
   margin: 10px;
   border-radius: 50%;
@@ -135,5 +140,8 @@ display: flex;
 
   .div_elem_user_search p{
    color: #645CBB;
-   margin-top: 30px;
+   margin-top: 20px;
+   font-family: 'Noto Serif Khitan Small Script', sans-serif;
+font-family: 'Poppins', sans-serif;
+font-family: 'Roboto', sans-serif;
     }

@@ -7,6 +7,7 @@ function ListOfNotifications({ notificationId }) {
   const [notification, setNotification] = useState([]);
   const [user, setUser] = useState([]);
   const [animal, setAnimal] = useState([]);
+  const [post, setPost] = useState([]);
   const picture = user ? `http://localhost:7070/${user.imagePaths}` : '';
   
 
@@ -41,7 +42,18 @@ function ListOfNotifications({ notificationId }) {
         setAnimal(response.data);
       }
     } catch (error) {
-      console.error('Eroare la obținerea userului:', error);
+      console.error('Eroare la obținerea animalului:', error);
+    }
+  };
+
+  const fetchPost = async () => {
+    try {
+      if (notification && notification.idPOST) {
+        const response = await axios.get(`http://localhost:7070/api/posts/${notification.idPOST}`);
+        setPost(response.data);
+      }
+    } catch (error) {
+      console.error('Eroare la obținerea postarii:', error);
     }
   };
 
@@ -49,6 +61,7 @@ function ListOfNotifications({ notificationId }) {
     if (notification && notification.idUSER) {
         fetchUser();
         fetchAnimal();
+        fetchPost();
     }
   }, [notification]);
 
@@ -59,15 +72,17 @@ function ListOfNotifications({ notificationId }) {
 
   return (
     <div className="notification_box">
-    {notification.type === 'comment' && user.name && notification.idPOST &&(
+
+    {notification.type === 'comment' && user.name && notification.idPOST && (
       <div className="header-content_pop"  onClick={ () =>  {window.location.href = `/viewPost/${notification.idPOST}`}}>
         <img src={picture} alt="User Profile" />
         <p>{user.name} added a comment to your post.</p>
       </div>
     )}
-    {notification.type === 'like' && user.name && (
-      <div className="header-content_pop" >
-        <p>{user.name} liked your post.</p>
+    {notification.type === 'alike' && user.name && (
+      <div className="header-content_pop"  onClick={ () =>  {window.location.href = `/viewPost/${notification.idPOST}`}}>
+        <img src={picture} alt="User Profile" />
+        <p>{user.name} have a post alike yours.</p>
       </div>
     )}
      {notification.type === 'add_medical_record' && user.name && animal.name && (

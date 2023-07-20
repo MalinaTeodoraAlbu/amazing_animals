@@ -7,6 +7,7 @@ import PetsIcon from '@mui/icons-material/Pets';
 import CategoryIcon from '@mui/icons-material/Category';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import axios from 'axios';
 
 const userID_LOCAL = localStorage.getItem('userId');
@@ -142,6 +143,23 @@ function SearchPopup(props) {
                   <input
                     name="type"
                     type="radio"
+                    value="type-location"
+                    id="type-location"
+                    checked={searchType === 'type-location'}
+      
+                  />
+                  <label htmlFor="type-users">
+                    <IconButton aria-label="notif" color="secondary"   onClick={() => handleChange('type-location')}>
+                      <LocationOnIcon />
+                    </IconButton>
+                    <span>Location</span>
+                  </label>
+                </div>
+
+                <div>
+                  <input
+                    name="type"
+                    type="radio"
                     value="type-special"
                     id="type-special"
                     checked={searchType === 'type-special'}
@@ -153,6 +171,8 @@ function SearchPopup(props) {
                     </IconButton>
                     <span>Category</span>
                   </label>
+
+                 
                  
                 </div>
               </div>
@@ -171,6 +191,21 @@ function SearchPopup(props) {
             <div className='div_elem_user_search' onClick={ () => handleClickUser(user._id)}>
               <img src={`http://localhost:7070/${user.imagePaths}`}></img>
               <p key={user.id}>{user.name}</p>    
+            </div>
+            
+          ))}
+      </ul>
+    )}
+    {searchType === 'type-location' && (
+      <ul>
+        {posts
+          .filter((post) =>
+          post.location && post.location.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .map((post) => (
+            <div className='div_elem_user_search' onClick={ () => handleClickPost(post._id)}>
+              <img src={`http://localhost:7070/${post.imagePaths}`}></img>
+              <p key={post.id}>{post.location}</p>    
             </div>
             
           ))}
@@ -201,12 +236,12 @@ function SearchPopup(props) {
    <option value="sex">sex</option>
  </select>
          )}
-     {selectedCriterial === "color" && (
+     {selectedCriterial === "color" &&  (
        <ul>
        {posts
          .filter((post) =>
-           post.color.toLowerCase().includes(searchTerm.toLowerCase())
-         )
+         post.color && post.color.toLowerCase().includes(searchTerm.toLowerCase())
+     )
          .map((post) => (
            <div className='div_elem_user_search' onClick={ () => handleClickPost(post._id)}>
              <img src={`http://localhost:7070/${post.imagePaths}`}></img>
@@ -220,7 +255,7 @@ function SearchPopup(props) {
        <ul>
        {posts
          .filter((post) =>
-           post.color.toLowerCase().includes(searchTerm.toLowerCase())
+         post.species && post.species.toLowerCase().includes(searchTerm.toLowerCase())
          )
          .map((post) => (
            <div className='div_elem_user_search' onClick={ () => handleClickPost(post._id)}>
@@ -235,7 +270,7 @@ function SearchPopup(props) {
        <ul>
        {posts
          .filter((post) =>
-           post.color.toLowerCase().includes(searchTerm.toLowerCase())
+         post.sex && post.sex.toLowerCase().includes(searchTerm.toLowerCase())
          )
          .map((post) => (
            <div className='div_elem_user_search' onClick={ () => handleClickPost(post._id)}>

@@ -91,9 +91,27 @@ function ListOfFav(props) {
             </IconButton>
         </div>
          </div>
-        <div className="img_fav_purple"> 
-        <img src={`http://localhost:7070/${post.imagePaths}`}></img>
+         
+       
+        {post.category === "Looking for Animal" ? 
+        (
+          <div className="img_fav_purple" style={{ position: 'relative' }}>
+          <img src={`http://localhost:7070/${post.imagePaths}`} />
+          <div className="fav_content__" style={{ position: 'absolute', top: '1px', left: '0', zIndex: '1' }}>
+            <p>{post.content}</p>
+          </div>
         </div>
+        
+
+         ):
+        (
+
+          <div className="img_fav_purple"> 
+          <img src={`http://localhost:7070/${post.imagePaths}`}></img>
+          </div>
+        )}
+        
+        
       </div>
     ))}
   </div>

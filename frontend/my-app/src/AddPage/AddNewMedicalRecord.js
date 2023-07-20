@@ -68,26 +68,8 @@ function AddNewMedicalRecord() {
       body: JSON.stringify(medicalRecord),
     });
 
-    if (res.status === 200) {
-      toast.success('Successfully added a new medical record!', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 1000,
-        style: {
-          marginTop: '5rem',
-        },
-        
-      }
-      );
-      window.location.href = '/myAnimals' ;
-    } else {
-      toast.error('Internal server error', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-        style: {
-          marginTop: '5rem',
-        },
-      });
-    }
+    
+    window.location.href = '/myAnimals' ;
   };
 
   return (

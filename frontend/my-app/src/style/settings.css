@@ -444,7 +444,14 @@ padding: 20px;
   margin-top: -100px;
  
 }
-
+.circle-image{
+  width: 120px;
+  max-width: 120px;
+  min-width: 120px;
+  height: 120px;
+  max-height: 120px;
+  min-width: 120px;
+}
 .payment_div p {
   margin-bottom: -1px;
 }

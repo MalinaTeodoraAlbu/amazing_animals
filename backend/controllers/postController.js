@@ -1,5 +1,6 @@
 const Post = require('../model/Post')
 const { postCollection } = require('../routers/mainRouter');
+const {NotificationsCollection} = require('../routers/mainRouter')
 const ObjectId = require("mongodb").ObjectId;
 
 const fs = require('fs');
@@ -18,7 +19,7 @@ const deleteImages = (imagePaths) => {
 };
 
 
-// Create a new user
+
 const insertPostIntoDB = async (req, res, next) => {
     try {
       console.log(req.body);
@@ -46,6 +47,37 @@ const insertPostIntoDB = async (req, res, next) => {
       }
       const result = await postCollection.insertOne(newPost)
       await newPost.save();
+
+      const similarPosts = await postCollection.find({
+        $and: [
+          { species: { $ne: undefined } },
+          { sex: { $ne: undefined } },
+          { color: { $ne: undefined } },
+          { location: { $ne: undefined } }
+        ],
+        userid: { $ne: newPost.userid }
+      }).toArray();
+  
+      if (similarPosts.length >= 3 ) {
+        console.log('Postări asemănătoare:', similarPosts);
+        
+        for (const post of similarPosts) {
+          console.log(post.userid)
+          console.log(newPost.userid)
+          if (post.userid !== newPost.userid) {
+            const newNotification = {
+              idPOST: newPost._id,
+              idUSER: newPost.userid,
+              ownerId: post.userid,
+              type: 'alike',
+              isview: false,
+              createdAt: new Date(),
+            };
+            await NotificationsCollection.insertOne(newNotification);
+          }
+        }
+      }
+     
       res.status(200).send(result)
     } catch (err) {
       res.status(500).send(err);

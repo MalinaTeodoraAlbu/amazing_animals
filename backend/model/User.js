@@ -43,7 +43,8 @@ const userSchema = new mongoose.Schema({
     default: "Standard"
   },
   imagePaths: {
-    type: String
+    type: String,
+    default: '../uploads/default.png'
   },
   followers: {
     type: Array,

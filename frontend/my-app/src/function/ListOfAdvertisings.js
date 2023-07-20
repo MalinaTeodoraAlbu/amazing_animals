@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../style/index.css';
-import next from '../media/right.png';
-import prev from '../media/left.png';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { IconButton } from '@mui/material';
 import { amber } from '@mui/material/colors';
@@ -18,18 +16,26 @@ function ListOfAdvertisings({ notificationId }) {
 
   useEffect(() => {
     axios.get(`http://localhost:7070/api/users/${userID_LOCAL}`)
-      .then(res => setUser(res.data))
+      .then(res => {
+        console.log('User data:', res.data);
+        setUser(res.data);
+      })
       .catch(err => console.error(err));
-
+  
     axios.get(`http://localhost:7070/api/advertising`)
-      .then(res => setAdvertisings(res.data))
+      .then(res => {
+        console.log('Advertising data:', res.data);
+        setAdvertisings(res.data);
+      })
       .catch(err => console.error(err));
   }, []);
 
+
+  
   useEffect(() => {
     const interval = setInterval(() => {
       handleNext();
-    }, 15000);
+    }, 10000);
 
     return () => {
       clearInterval(interval);
@@ -63,18 +69,35 @@ function ListOfAdvertisings({ notificationId }) {
 
   const currentAdvertising = filteredAdvertising[currentIndex];
 
+
+  console.log('Filtered advertising:', filteredAdvertising);
+console.log('Current advertising:', currentAdvertising);
+
+
   return (
     <div className='ListOFAdv'>
-      <img src={prev} alt="Prev" onClick={handlePrev} className="buttons" />
-
-      <div className='editButtonContainer'>
-        {currentAdvertising && (
-          <div className="flip-card ">
-            <div className="flip-card-inner">
-              <div className='container_adv'>
-                <img className='flip-card-front' src={`http://localhost:7070/${currentAdvertising.imagePaths}`} alt={currentAdvertising.content}></img>
-              </div>
-              <div className="flip-card-back">
+      {currentAdvertising && (
+        <div className="flip-card">
+          <div className="flip-card-inner">
+            <div className='container_adv'>
+            <img
+                className="flip-card-front"
+                src={`http://localhost:7070/${currentAdvertising.imagePaths}`}
+                alt={currentAdvertising.content}
+                key={currentAdvertising._id}
+              />
+            </div>
+            <div className="flip-card-back">
+              {currentAdvertising.userid === userID_LOCAL ? (
+                <div className="editButton">
+                  <IconButton size="small" onClick={(event) => handleEdit(event)} style={{ borderRadius: '50%' }} disableRipple>
+                    <ModeEditIcon fontSize="small"  sx={{ color: amber[50] }}/>
+                  </IconButton>
+                </div>
+              ) : (
+                <div className="editButton"></div>
+              )}
+              <div className='flip-card-back_p'> 
                 <p>Details: {currentAdvertising.content}</p>
                 <p>Category: {currentAdvertising.category}</p>
                 {currentAdvertising.startDate && (
@@ -86,24 +109,10 @@ function ListOfAdvertisings({ notificationId }) {
                 <p>{currentAdvertising.location}</p>
                 <p>{new Date(currentAdvertising.datePosted).toLocaleDateString("en-GB")}</p>
               </div>
-              {currentAdvertising.userid === userID_LOCAL ?
-               ( <div className="editButton">
-               <IconButton size="small" onClick={(event) => handleEdit(event)} style={{ borderRadius: '50%' }} disableRipple>
-                 <ModeEditIcon fontSize="small"  sx={{ color: amber[50] }}/>
-               </IconButton>
-             </div>) 
-               : (
-                <div className="editButton">
-
-              </div>
-               )}
-             
             </div>
           </div>
-        )}
-      </div>
-
-      <img src={next} alt="Next" onClick={handleNext} className="buttons" />
+        </div>
+      )}
     </div>
   );
 }

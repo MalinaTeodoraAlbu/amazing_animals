@@ -113,10 +113,7 @@ function AddNewAnimal() {
                     }
                     }}/>
             </div>
-            <div className="checkboxes">
-            <label htmlFor="notification">Receive notification about sterilization campaign:</label>
-            <input type="checkbox" id="notification" name="notification" value="true"/>
-            </div>
+            
         </div>
       </div>
     </div>

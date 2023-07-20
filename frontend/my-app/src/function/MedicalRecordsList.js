@@ -36,12 +36,13 @@ function MedicalRecordsList(props) {
              <div> <p>Title: {record.title}</p>
             <p>Description: {record.content}</p>
             <p>Date: {record.date}</p>
-            <p> {record.repeat ? "Yes" : "No"}</p> </div>
+             </div>
              {record.repeat === true ? (
-              <p>{record.dateRepeat}, times: {record.repeatTimes}</p>
+              <><p></p>
+              <p>Yes, date: {record.dateRepeat}, times: {record.repeatTimes}</p></>
               
              ) : (
-              <p></p>
+              <p>No</p>
              ) }
                <div className="editButton" >
 

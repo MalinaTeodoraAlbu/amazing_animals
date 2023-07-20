@@ -18,7 +18,7 @@ function EditAnimal() {
   const [weight,setWeight] = useState('');
   const [picture,setPicture] = useState('');
   const [birthday, setBirthday] = useState("");
-  const [sterilizer, setSterilizer] = useState("");
+  const [sterilizer, setSterilizer] = useState(false);
   
   useEffect(() => {
     if(animalId){
@@ -114,21 +114,25 @@ const handlePictureChange = (event) => {
           <input type="date" id="birthday" name="birthday" value={birthday} onChange={(e) => setBirthday(e.target.value)} />
           <div className="checkboxes_a">
             <label htmlFor="sterilizer">Sterile:</label>
-            <input type="checkbox" id="sterilizer" name="sterilizer" value={sterilizer}
-                   
-                    onChange={(e) => {
-                    setSterilizer(e.target.checked);
-                    const notificationCheckbox = document.getElementById("notification");
-                    notificationCheckbox.disabled = e.target.checked;
-                    if (e.target.checked) {
-                        notificationCheckbox.checked = false;
-                    }
-                    }}/>
+            <input
+  type="checkbox"
+  id="sterilizer"
+  name="sterilizer"
+  value={sterilizer}
+  checked={sterilizer} 
+  onChange={(e) => {
+    console.log('Checkbox checked:', e.target.checked);
+    setSterilizer(e.target.checked);
+    const notificationCheckbox = document.getElementById("notification");
+    notificationCheckbox.disabled = e.target.checked;
+    if (e.target.checked) {
+      notificationCheckbox.checked = false;
+    }
+  }}
+/>
+
             </div>
-            <div className="checkboxes">
-            <label htmlFor="notification">Receive notification about sterilization campaign:</label>
-            <input type="checkbox" id="notification" name="notification" value="true"/>
-            </div>
+            
         </div>
       </div>
     </div>

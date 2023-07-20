@@ -308,16 +308,18 @@ mainRouter.post('/comments', async (req, res) => {
       return res.status(404).send({ message: 'Post not found' });
     }
   
-    const newNotification = {
-      idPOST: newComment.postID,
-      idUSER: newComment.userid,
-      ownerId: post.userid, 
-      type: 'comment',
-      isview: false,
-      createdAt: new Date()
-    };
-
-    await NotificationsCollection.insertOne(newNotification);
+    if(newComment.userid !==post.userid){
+      const newNotification = {
+        idPOST: newComment.postID,
+        idUSER: newComment.userid,
+        ownerId: post.userid, 
+        type: 'comment',
+        isview: false,
+        createdAt: new Date()
+      };
+      await NotificationsCollection.insertOne(newNotification);
+    }
+    
     console.log(newComment)
     res.status(200).send(result);
   } catch (err) {

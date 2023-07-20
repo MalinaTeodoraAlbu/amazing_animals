@@ -7,6 +7,7 @@ import next from '../media/right.png';
 import prev from '../media/left.png';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import Delete from '@mui/icons-material/Delete';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { IconButton } from '@mui/material';
 import { amber } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
@@ -164,7 +165,9 @@ function Vet({ notificationId }) {
         <div className='addNewClint'>
           <div className="border_vet">
             <h3>Add New Client</h3>
-            <button onClick={handleBack}>Back</button>
+            <IconButton onClick={handleBack} disableRipple>
+            <ArrowBackIcon fontSize="small" sx={{ color: amber[50] }} />
+          </IconButton>
           </div>
           <input
               type="text"

@@ -31,6 +31,32 @@ useEffect(() => {
 
 }, [userID_LOCAL]);
 
+const handleMessage = (userID) => {
+  console.log('Conversations:', conversations);
+  console.log('userID_LOCAL:', userID_LOCAL);
+  console.log('userID:', userID);
+
+  const existingConversation = conversations.find((conversation) => {
+    const members = conversation.members;
+    return (
+      (members[0] === userID_LOCAL && members[1] === userID) ||
+      (members[0] === userID && members[1] === userID_LOCAL)
+    );
+  });
+
+  console.log('Existing Conversation:', existingConversation);
+
+  if (existingConversation) {
+    window.location.href = `/messanger`;
+  } else {
+    axios
+      .post(`http://localhost:7070/api/conversation`, { senderId: userID_LOCAL, receiverId: userID })
+      .then((res) => {
+      window.location.href = `/messanger`;
+      })
+      .catch((err) => console.error(err));
+  }
+};
 
 
   const handleCloseFriendPopup = () => {
@@ -95,10 +121,7 @@ useEffect(() => {
     window.location.href = `/user/${userId}`;
   };
 
-  const handleMessages = (event, userId) => {
-    event.preventDefault();
-    window.location.href = `/messanger`;
-  };
+  
 
     return (
       <div className={`popup_container ${props.isFriendPopupOpen ? 'open' : ''}`}>
@@ -133,9 +156,7 @@ useEffect(() => {
             <AccountBoxIcon />
       
             </IconButton>
-            <IconButton aria-label="notif" color="secondary" onClick={handleMessages} disableRipple>
-            <MessageIcon />
-            </IconButton>
+
   
         </div>
       ))}
@@ -150,9 +171,7 @@ useEffect(() => {
             <AccountBoxIcon />
       
             </IconButton>
-            <IconButton aria-label="notif" color="secondary" onClick={handleMessages} disableRipple>
-            <MessageIcon />
-            </IconButton>
+           
         </div>
         
       ))}

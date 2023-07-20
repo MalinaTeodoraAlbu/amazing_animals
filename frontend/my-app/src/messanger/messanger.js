@@ -33,9 +33,8 @@ export default function Messanger() {
     });
   }, []);
 
-  const handleLooKProfile = () => {
-    window.location.href = `/user/${user._id}`;
-  };
+  
+
   useEffect(() => {
     if (userId) {
       axios.get(`http://localhost:7070/api/users/${userId}`)
@@ -178,7 +177,7 @@ export default function Messanger() {
                 src={`http://localhost:7070/${member.imagePaths}`}
                 alt="Profile"
                 className="profilePicture"
-                onClick={handleLooKProfile}
+              
               />
               <p className="username">{member.name}</p>
             </div>

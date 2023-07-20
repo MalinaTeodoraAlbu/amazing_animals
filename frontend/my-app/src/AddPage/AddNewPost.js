@@ -137,10 +137,7 @@ const handleSubmit = async (event) => {
           const animalRes = await axios.post(`http://localhost:7070/api/animal`, formDataAnimal);
         }
      
-      if(res.status === 200){
         window.location.href = `/feed`;
-      }
-      
 
   } catch (error) {
     console.error(error);
@@ -162,14 +159,23 @@ const handleSubmit = async (event) => {
     return (
    
       <div className="add-new-post">
-
-       <div className="add-new-post-picture-side">
-       <label htmlFor="picture">Picture:</label>
-          <div className="rect-image-add">
-            <img src={picture} alt="animal picture" />
-          </div>
-          <input type="file" id="picture" name="picture" onChange={handlePictureChange} />
-    </div>
+{category === "Looking for Animal" ? (  
+<div className="add-new-post-picture-side">
+<div className="rect-image-add">
+         <img src={picture} alt="animal picture" />
+       </div>
+      
+    </div>) : (
+    <div className="add-new-post-picture-side">
+    <label htmlFor="picture">Picture:</label>
+    
+       <div className="rect-image-add">
+         <img src={picture} alt="animal picture" />
+       </div>
+       <input type="file" id="picture" name="picture" onChange={handlePictureChange} />
+ </div>
+)}
+     
     <section id="section-1" style={{ display: currentSection === 'section-1' ? 'block' : 'none' }}>
     <div className="add-new-post-picture-side">
           
@@ -227,13 +233,21 @@ const handleSubmit = async (event) => {
     <section id="section-2" style={{ display: currentSection === 'section-2' ? 'block' : 'none' }}>
     <div className="add-new-post-picture-side">
             <h3>Animal Details</h3>
+           
+            {category === "Looking for Animal" ?
+            (
+              <div> </div>
+               ):
+          (
+            <>
             <label>Do you want to take the details for an existing animal?</label>
-          <select value={animalId || ''} onChange={(e) => setAnimalId(e.target.value)}>
-          <option value="-">-</option>
-          {animals.map(animal => (
-            <option key={animal._id} value={animal._id}>{animal.name}</option>
-          ))}
-          </select>
+            <select value={animalId || ''} onChange={(e) => setAnimalId(e.target.value)}>
+            <option value="-">-</option>
+            {animals.map(animal => (
+              <option key={animal._id} value={animal._id}>{animal.name}</option>
+            ))}
+            </select>
+            
             <div className="form-control">
               <label>Name</label>
               <input
@@ -243,6 +257,9 @@ const handleSubmit = async (event) => {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
+            </>
+          )}
+         
             <div className="form-control">
               <label>Species</label>
               <input
@@ -270,7 +287,15 @@ const handleSubmit = async (event) => {
                 onChange={(e) => setColor(e.target.value)}
               />
             </div>
-            <div className="form-control">
+            {category === "Looking for Animal" ? 
+            (
+              <div> 
+
+              </div>
+            ):
+          (
+            <>
+             <div className="form-control">
               <label>Birthday</label>
               <input
                 type="date"
@@ -288,15 +313,7 @@ const handleSubmit = async (event) => {
                 onChange={(e) => setWeight(e.target.value)}
               />
             </div>
-            <div className="form-control">
-              <label>Sterilizer</label>
-              <input
-                type="checkbox"
-                id='checkbox_form'
-                checked={sterilizer}
-                onChange={(e) => setSterilizer(e.target.checked)}
-              />
-            </div>
+            
             <div className="form-control">
             <label>Do you want to add this animal to your list?</label>
             <input
@@ -305,7 +322,9 @@ const handleSubmit = async (event) => {
               checked={saveAnimal}
               onChange={(e) => setSaveAnimal(e.target.checked)}
             />
-          </div>
+          </div></>
+          )}
+           
           </div>
 
           <div className='r_wrap'>

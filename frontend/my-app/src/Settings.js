@@ -383,24 +383,14 @@ function Settings(props) {
         >
          <p id='p_tab'>Account</p> 
         </button>
-        <button
-          className={toggleState === 2 ? "tabs active-tabs" : "tabs"}
-          onClick={() => toggleTab(2)}
-        >
-          <p id='p_tab'>Password & Security</p>
-        </button>
+
         <button
           className={toggleState === 3 ? "tabs active-tabs" : "tabs"}
           onClick={() => toggleTab(3)}
         >
         <p id='p_tab'>Manage Subscription</p> 
         </button>
-        <button
-          className={toggleState === 4 ? "tabs active-tabs" : "tabs"}
-          onClick={() => toggleTab(4)}
-        >
-         <p id='p_tab'>Notifications</p> 
-        </button>
+        
       </div>
 
       <div className="content-tabs">
